@@ -78,12 +78,6 @@ export default function ArchivesPage() {
 
   return (
     <div className="relative -mb-nav min-h-dvh bg-ivory pb-[calc(128px+env(safe-area-inset-bottom))] text-ink">
-      {/* Decorative ambient washes, drawn with palette tokens so they follow the theme. */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -left-24 top-10 h-64 w-64 rounded-full bg-sage-soft/40 blur-3xl" />
-        <div className="absolute -right-24 top-1/3 h-72 w-72 rounded-full bg-terracotta-soft/40 blur-3xl" />
-      </div>
-
       <a
         href="#main-archive-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-xl focus:bg-navy focus:px-4 focus:py-2.5 focus:font-bold focus:text-on-navy focus:outline-none focus:ring-2 focus:ring-terracotta"

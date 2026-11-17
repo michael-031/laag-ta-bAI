@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { CompassOutlineIcon, InformationCircleOutlineIcon } from '@/components/icons/ionicons'
 
 export function Loading({ label = 'Loading…' }: { label?: string }) {
   return (
-    <div role="status" className="flex items-center justify-center gap-2 py-10 text-muted">
-      <Loader2 className="animate-spin" size={20} aria-hidden /> {label}
+    <div role="status" className="flex items-center justify-center gap-2.5 py-10 text-sm font-medium text-ink-muted">
+      <span className="size-4 animate-spin rounded-full border-2 border-ivory-line border-t-navy" aria-hidden />
+      {label}
     </div>
   )
 }
@@ -12,12 +13,16 @@ export function Loading({ label = 'Loading…' }: { label?: string }) {
 export function ErrorMessage({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   const message = error instanceof Error ? error.message : 'Something went wrong.'
   return (
-    <div role="alert" className="mx-5 my-6 rounded-2xl border border-crimson/40 bg-crimson/10 p-4 text-sm">
+    <div role="alert" className="mx-5 my-4 rounded-2xl border border-danger-line bg-danger-soft p-4 text-sm text-danger">
       <p className="flex items-center gap-2 font-semibold">
-        <AlertCircle size={18} aria-hidden /> {message}
+        <InformationCircleOutlineIcon size={18} className="shrink-0" /> {message}
       </p>
       {onRetry && (
-        <button type="button" onClick={onRetry} className="touch-target mt-2 font-bold text-primary underline">
+        <button
+          type="button"
+          onClick={onRetry}
+          className="touch-target mt-2 inline-flex items-center text-sm font-bold text-danger underline"
+        >
           Try again
         </button>
       )}
@@ -25,12 +30,12 @@ export function ErrorMessage({ error, onRetry }: { error: unknown; onRetry?: () 
   )
 }
 
-export function EmptyState({ icon, title, children }: { icon: ReactNode; title: string; children?: ReactNode }) {
+export function EmptyState({ icon, title, children }: { icon?: ReactNode; title: string; children?: ReactNode }) {
   return (
-    <div className="mx-5 flex flex-col items-center gap-2 rounded-2xl border border-line bg-surface p-8 text-center">
-      <div className="text-primary">{icon}</div>
-      <p className="font-bold">{title}</p>
-      {children && <div className="text-sm text-muted">{children}</div>}
+    <div className="mx-5 flex flex-col items-center gap-2 rounded-3xl border border-ivory-line bg-ivory-surface p-8 text-center">
+      <div className="text-terracotta-ink">{icon ?? <CompassOutlineIcon size={28} />}</div>
+      <p className="font-bold text-ink">{title}</p>
+      {children && <div className="text-sm text-ink-muted">{children}</div>}
     </div>
   )
 }

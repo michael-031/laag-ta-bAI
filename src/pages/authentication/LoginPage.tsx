@@ -7,7 +7,6 @@ import {
   LockClosedOutlineIcon,
   LogoGoogleIcon,
   MailOutlineIcon,
-  SparklesOutlineIcon,
 } from '@/components/icons/ionicons'
 import { useAuth } from '@/features/auth/AuthContext'
 import { DevSignIn } from '@/features/auth/DevSignIn'
@@ -15,12 +14,10 @@ import { signInErrorMessage } from '@/features/auth/signInError'
 import { usePreferences } from '@/features/preferences/PreferencesContext'
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ivory'
 
 /**
- * Figma Final Pages "Login (Day)" / "Login (Night)" (268:7254, 268:7370). Email login goes
- * through the API (`POST /v1/auth/login`), which returns the bearer token the rest of the API
- * accepts; Google sign-in goes straight to Supabase OAuth.
+ * Wayfare-inspired login bottom sheet (Images 1 & 3): pure white bottom sheet in light mode
+ * with solid black primary button, 1px-bordered secondary buttons, and clean passive footer.
  */
 export default function LoginPage() {
   const auth = useAuth()
@@ -58,7 +55,6 @@ export default function LoginPage() {
     setError(null)
     setBusy('google')
     try {
-      // Redirects to Google and back; the session arrives through onAuthStateChange.
       await auth.signInWithGoogle()
     } catch (e) {
       setError(signInErrorMessage(e, 'Google sign-in failed. Please try again.'))
@@ -66,23 +62,23 @@ export default function LoginPage() {
     }
   }
 
-  // Day photo: lighter field wells; night photo: darker ones, as in the two Figma frames.
-  const well = night ? 'bg-navy-pressed/70' : 'bg-navy-pressed/35'
+  const focus = night
+    ? 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ivory'
+    : 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy'
+  const well = night ? 'bg-navy-pressed/70 border-ivory/30 text-ivory' : 'bg-ivory-deep border-ivory-line text-ink'
 
   return (
     <AuthScreen>
       <AuthCard>
         <header className="flex flex-col items-center text-center">
-          <p lang="ceb" className="flex items-center gap-1.5 text-[0.6875rem] font-bold tracking-[0.12em] text-terracotta-light uppercase">
-            <SparklesOutlineIcon size={16} />
+          <p lang="ceb" className={`font-display text-sm italic ${night ? 'text-ivory/75' : 'text-ink-muted'}`}>
             Maayong pagbalik
           </p>
-          <h1 className="pt-2 text-[2rem] leading-[1.2] font-black text-ivory">Log In</h1>
-          <p className="pt-2 text-base text-ivory/85">Your heritage journey awaits.</p>
+          <h1 className={`font-display pt-0.5 text-3xl font-bold tracking-tight ${night ? 'text-ivory' : 'text-ink'}`}>Log In</h1>
         </header>
 
-        <form noValidate onSubmit={submit} aria-busy={busy === 'password'} className="mt-8 flex flex-col gap-4">
-          <Field label="Email" icon={<MailOutlineIcon size={20} />} error={emailError} well={well}>
+        <form noValidate onSubmit={submit} aria-busy={busy === 'password'} className="mt-5 flex flex-col gap-3.5">
+          <Field label="Email" icon={<MailOutlineIcon size={19} />} error={emailError} well={well} night={night}>
             {(props) => (
               <input
                 {...props}
@@ -99,17 +95,20 @@ export default function LoginPage() {
           </Field>
           <Field
             label="Password"
-            icon={<LockClosedOutlineIcon size={20} />}
+            icon={<LockClosedOutlineIcon size={19} />}
             error={passwordError}
             well={well}
+            night={night}
             action={
               <button
                 type="button"
                 onClick={() => setShowPassword((visible) => !visible)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
-                className={`touch-target -mr-3 flex shrink-0 items-center justify-center rounded-full text-ivory/90 hover:text-ivory ${focus}`}
+                className={`touch-target -mr-3 flex shrink-0 items-center justify-center rounded-full ${
+                  night ? 'text-ivory/85 hover:text-ivory' : 'text-ink-muted hover:text-ink'
+                } ${focus}`}
               >
-                {showPassword ? <EyeOffOutlineIcon size={20} /> : <EyeOutlineIcon size={20} />}
+                {showPassword ? <EyeOffOutlineIcon size={19} /> : <EyeOutlineIcon size={19} />}
               </button>
             }
           >
@@ -134,59 +133,76 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={busy !== null}
-            className={`mt-4 min-h-14 w-full rounded-xl bg-terracotta-ink text-[0.9375rem] font-bold tracking-[0.08em] text-ivory uppercase shadow-lg transition-colors hover:bg-terracotta-ink/90 disabled:opacity-70 ${focus}`}
+            className={`mt-2 min-h-13 w-full rounded-xl text-sm font-bold transition-colors disabled:opacity-70 ${
+              night
+                ? 'bg-ivory text-navy hover:bg-ivory/90'
+                : 'bg-navy text-on-navy hover:bg-navy-pressed'
+            } ${focus}`}
           >
             {busy === 'password' ? 'Logging in…' : 'Log in'}
           </button>
         </form>
 
-        {/* Memory-mode API without Supabase: email login works against the API's in-memory accounts,
-            and the dev traveler stays as a shortcut. */}
+        {auth.mode === 'supabase' && (
+          <div className="mt-2.5">
+            <button
+              type="button"
+              onClick={continueWithGoogle}
+              disabled={busy !== null}
+              aria-busy={busy === 'google'}
+              aria-label="Continue with Google"
+              className={`flex min-h-13 w-full items-center justify-center gap-2.5 rounded-xl border px-4 text-sm font-semibold transition-colors disabled:opacity-70 ${
+                night
+                  ? 'border-ivory/25 bg-ivory-surface text-ink hover:bg-ivory'
+                  : 'border-ivory-line bg-ivory-surface text-ink hover:bg-ivory-deep'
+              } ${focus}`}
+            >
+              <LogoGoogleIcon size={18} />
+              Continue with Google
+            </button>
+          </div>
+        )}
+
         {auth.mode === 'dev' && (
-          <div className="mt-6">
+          <div className="mt-4">
             <DevSignIn tone="notice" />
           </div>
         )}
 
-        <div className="mt-4 flex justify-center">
+        <div className="mt-2.5 flex justify-center">
           <Link
             to="/"
-            className={`flex min-h-12 items-center rounded-lg px-3 text-[0.9375rem] font-bold text-ivory underline underline-offset-4 ${focus}`}
+            className={`flex min-h-12 w-full items-center justify-center rounded-xl border px-4 text-sm font-semibold transition-colors ${
+              night
+                ? 'border-ivory/25 bg-transparent text-ivory hover:bg-ivory/10'
+                : 'border-ivory-line bg-ivory-surface text-ink hover:bg-ivory-deep'
+            } ${focus}`}
           >
             Continue as Guest
           </Link>
         </div>
 
-        {/* Facebook and Apple are in Figma but not enabled in Supabase yet; only Google works. */}
-        {auth.mode === 'supabase' && (
-          <>
-            <div className="mt-4 flex items-center gap-3">
-              <span className="h-px flex-1 bg-ivory/40" aria-hidden />
-              <p className="text-[0.625rem] font-bold tracking-[0.16em] text-ivory/80 uppercase">Or continue with</p>
-              <span className="h-px flex-1 bg-ivory/40" aria-hidden />
-            </div>
-            <div className="flex justify-center pt-4">
-              <button
-                type="button"
-                onClick={continueWithGoogle}
-                disabled={busy !== null}
-                aria-busy={busy === 'google'}
-                aria-label="Continue with Google"
-                className={`flex size-13 items-center justify-center rounded-full border border-ivory/35 bg-sage/15 text-ivory transition-colors hover:bg-sage/25 disabled:opacity-70 ${focus}`}
-              >
-                <LogoGoogleIcon size={22} />
-              </button>
-            </div>
-          </>
-        )}
-
-        <p className="mt-4 flex flex-wrap items-center justify-center gap-x-1.5 text-sm text-ivory/85">
+        {/* Clean passive footer (Image 3) */}
+        <p className={`mt-3 flex flex-wrap items-center justify-center gap-x-1.5 text-sm ${night ? 'text-ivory/80' : 'text-ink-muted'}`}>
           New here?
           <Link
             to="/register"
-            className={`flex min-h-12 items-center rounded-lg font-bold text-terracotta-light underline underline-offset-4 ${focus}`}
+            className={`flex min-h-12 items-center rounded-lg font-bold underline underline-offset-4 ${
+              night ? 'text-ivory' : 'text-ink'
+            } ${focus}`}
           >
             Create Account
+          </Link>
+        </p>
+
+        <p className={`mt-0.5 text-center text-xs ${night ? 'text-ivory/65' : 'text-ink-muted'}`}>
+          By continuing you agree to our{' '}
+          <Link to="/terms" className="underline underline-offset-2">
+            Terms
+          </Link>{' '}
+          and{' '}
+          <Link to="/privacy" className="underline underline-offset-2">
+            Privacy
           </Link>
         </p>
       </AuthCard>
@@ -196,12 +212,12 @@ export default function LoginPage() {
 
 type InputProps = { id: string; 'aria-invalid': boolean; 'aria-describedby'?: string; className: string }
 
-/** Figma TextField on the auth card: uppercase label, 56px well, terracotta-light icon. */
 function Field({
   label,
   icon,
   error,
   well,
+  night,
   action,
   children,
 }: {
@@ -209,33 +225,35 @@ function Field({
   icon: ReactNode
   error: string | null
   well: string
+  night: boolean
   action?: ReactNode
   children: (props: InputProps) => ReactNode
 }) {
   const id = useId()
   const errorId = `${id}-error`
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-xs font-bold tracking-[0.14em] text-terracotta-light uppercase">
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className={`text-xs font-semibold ${night ? 'text-ivory/85' : 'text-ink-body'}`}>
         {label}
       </label>
       <div
-        className={`flex h-14 items-center gap-3 rounded-xl border px-4 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ivory ${well} ${
-          error ? 'border-danger-line' : 'border-ivory/35'
-        }`}
+        className={`flex h-13 items-center gap-3 rounded-xl border px-3.5 focus-within:outline-2 focus-within:outline-offset-2 ${
+          night ? 'focus-within:outline-ivory' : 'focus-within:outline-navy'
+        } ${well} ${error ? 'border-danger-line' : ''}`}
       >
-        <span className="shrink-0 text-terracotta-light">{icon}</span>
+        <span className={`shrink-0 ${night ? 'text-ivory/75' : 'text-ink-muted'}`}>{icon}</span>
         {children({
           id,
           'aria-invalid': Boolean(error),
           'aria-describedby': error ? errorId : undefined,
-          className: 'h-full min-w-0 flex-1 bg-transparent text-base text-ivory outline-none placeholder:text-ivory/70',
+          className: `h-full min-w-0 flex-1 bg-transparent text-sm outline-none ${
+            night ? 'text-ivory placeholder:text-ivory/60' : 'text-ink placeholder:text-ink-muted'
+          }`,
         })}
         {action}
       </div>
-      {/* danger-line is the light red that reads on the navy card (5.9:1); the text says what's wrong. */}
       {error && (
-        <p id={errorId} className="text-sm font-semibold text-danger-line">
+        <p id={errorId} className="text-xs font-semibold text-danger">
           {error}
         </p>
       )}

@@ -433,3 +433,97 @@ export const RibbonOutlineIcon = icon(
     <path {...stroke} d="M176 256l-32 208 112-64 112 64-32-208" />
   </>,
 )
+
+export const ShareSocialOutlineIcon = icon(
+  <>
+    <circle cx="128" cy="256" r="48" {...stroke} />
+    <circle cx="384" cy="112" r="48" {...stroke} />
+    <circle cx="384" cy="400" r="48" {...stroke} />
+    <path {...stroke} d="M169.83 279.53l172.34 96.94M342.17 135.53l-172.34 96.94" />
+  </>,
+)
+
+export const MicOutlineIcon = icon(
+  <>
+    <path {...stroke} d="M192 448h128M384 208v32c0 70.4-57.6 128-128 128h0c-70.4 0-128-57.6-128-128v-32M256 368v80" />
+    <path {...stroke} d="M256 64a63.68 63.68 0 00-64 64v111a64 64 0 00128 0V128a63.68 63.68 0 00-64-64z" />
+  </>,
+)
+
+export const AddOutlineIcon = icon(<path {...stroke} d="M256 112v288M400 256H112" />)
+
+export const ImageOutlineIcon = icon(
+  <>
+    <rect x="48" y="80" width="416" height="352" rx="48" ry="48" {...stroke} />
+    <circle cx="336" cy="176" r="32" {...stroke} />
+    <path {...stroke} d="M304 335.79l-90.66-90.49a32 32 0 00-43.87-1.3L48 352M224 432l123.34-123.34a32 32 0 0143.11-2L464 368" />
+  </>,
+)
+
+export const ArrowUpIcon = icon(<path {...stroke} strokeWidth={48} d="M112 244l144-144 144 144M256 120v292" />)
+
+export const ThumbsUpOutlineIcon = icon(
+  <path
+    {...stroke}
+    d="M320 458.16S304 464 256 464s-74-16-96-32H96a64 64 0 01-64-64V256a64 64 0 0164-64h48a24 24 0 0020.43-11.42l66.37-107.75A36.7 36.7 0 01262.13 56c17.94 0 32.16 14.37 32.16 32.31 0 11.41-5.21 30.86-13.79 49.49-4.78 10.38-6.48 24.4 2.55 31.78a22.14 22.14 0 0014.12 4.89H416a48 48 0 0148 48c0 15.86-10.37 29.66-24.21 33.49 12.1 4.4 20.21 16.58 20.21 30.51 0 17.56-13.59 32.22-30.81 33.76 7.82 6.84 12.81 17.07 12.81 28.48 0 18.67-14.2 34.48-32.51 36.22 3.31 5.69 5.51 12.31 5.51 19.37 0 21-17 38-38 38z"
+  />,
+)
+
+export const ThumbsDownOutlineIcon = icon(
+  <path
+    {...stroke}
+    d="M192 53.84S208 48 256 48s74 16 96 32h64a64 64 0 0164 64v112a64 64 0 01-64 64h-48a24 24 0 00-20.43 11.42l-66.37 107.75A36.7 36.7 0 01249.87 456c-17.94 0-32.16-14.37-32.16-32.31 0-11.41 5.21-30.86 13.79-49.49 4.78-10.38 6.48-24.4-2.55-31.78a22.14 22.14 0 00-14.12-4.89H96a48 48 0 01-48-48c0-15.86 10.37-29.66 24.21-33.49-12.1-4.4-20.21-16.58-20.21-30.51 0-17.56 13.59-32.22 30.81-33.76-7.82-6.84-12.81-17.07-12.81-28.48 0-18.67 14.2-34.48 32.51-36.22C99.2 122.46 97 115.84 97 108.78c0-21 17-38 38-38z"
+  />,
+)
+
+export const ScanOutlineIcon = icon(
+  <path
+    {...stroke}
+    d="M336 448h56a56 56 0 0056-56v-56M448 176v-56a56 56 0 00-56-56h-56M176 448h-56a56 56 0 01-56-56v-56M64 176v-56a56 56 0 0156-56h56"
+  />,
+)
+
+export const EllipsisHorizontalIcon = icon(
+  <>
+    <circle cx="256" cy="256" r="48" fill="currentColor" />
+    <circle cx="416" cy="256" r="48" fill="currentColor" />
+    <circle cx="96" cy="256" r="48" fill="currentColor" />
+  </>,
+)
+
+export const ChevronDownOutlineIcon = icon(<path {...stroke} d="M112 184l144 144 144-144" />)
+
+export const CheckmarkCircleIcon = icon(
+  <path
+    fill="currentColor"
+    d="M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208 208-93.31 208-208S370.69 48 256 48zm108.25 138.29l-134.4 160a16 16 0 01-12 5.71h-.27a16 16 0 01-11.89-5.3l-57.6-64a16 16 0 1123.78-21.4l45.29 50.32 122.59-145.91a16 16 0 0124.5 20.58z"
+  />,
+)
+
+export const LogInOutlineIcon = icon(
+  <>
+    <path {...stroke} d="M192 176v-40a40 40 0 0140-40h160a40 40 0 0140 40v240a40 40 0 01-40 40H240c-22.09 0-48-17.91-48-40v-40" />
+    <path {...stroke} d="M288 336l80-80-80-80M80 256h272" />
+  </>,
+)
+
+export const LanguageOutlineIcon = icon(
+  <>
+    <path {...stroke} d="M48 112h288M192 64v48M272 448l96-224 96 224M301.5 384h133M281.3 112S257 206 199 277 80 384 80 384" />
+    <path {...stroke} d="M256 336s-35-27-72-75-56-85-56-85" />
+  </>,
+)
+
+export const CopyOutlineIcon = icon(
+  <>
+    <rect x="128" y="128" width="336" height="336" rx="57" ry="57" {...stroke} />
+    <path {...stroke} d="M383.5 128l.5-24a56.16 56.16 0 00-56-56H112a64.19 64.19 0 00-64 64v216a56.16 56.16 0 0056 56h24" />
+  </>,
+)
+
+export const DownloadOutlineIcon = icon(
+  <>
+    <path {...stroke} d="M336 176h40a40 40 0 0140 40v208a40 40 0 01-40 40H136a40 40 0 01-40-40V216a40 40 0 0140-40h40" />
+    <path {...stroke} d="M176 272l80 80 80-80M256 48v288" />
+  </>,
+)

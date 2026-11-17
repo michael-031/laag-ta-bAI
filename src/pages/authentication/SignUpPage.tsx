@@ -201,29 +201,34 @@ export default function SignUpPage() {
     }
   }
 
+  const isDay = resolvedTheme === 'light'
   const inputClass = (invalid: boolean) =>
-    `mt-1 h-12 w-full rounded-xl border bg-design-surface px-4 text-ivory text-base outline-none transition focus:border-terracotta focus:ring-2 focus:ring-terracotta/30 ${invalid ? 'border-error' : 'border-design-line'}`
+    `mt-1 h-12 w-full rounded-xl border bg-design-surface px-4 text-base outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/20 ${isDay ? 'text-ink' : 'text-ivory'} ${invalid ? 'border-error' : 'border-design-line'}`
 
   return (
-    // Pinned to the light palette: its ivory text sits on a photo and a dark card in both themes.
-    <main data-palette="light" className={`auth-signup min-h-dvh bg-cover bg-center bg-fixed ${resolvedTheme === 'light' ? 'auth-signup-day' : 'auth-signup-night'}`}>
-      <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 py-6 sm:px-6">
+    // Pinned to the light palette: its ivory text sits on a photo in both themes, and the day sheet is pure white.
+    <main data-palette="light" className={`auth-signup min-h-dvh bg-cover bg-center bg-fixed ${isDay ? 'auth-signup-day' : 'auth-signup-night'}`}>
+      <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-between pt-[max(1rem,env(safe-area-inset-top))]">
         {/* Page header */}
-        <header className="flex items-center justify-between text-ivory">
-          <Link to="/" className="text-sm font-bold tracking-[0.2em]">Laag ta b<span className="text-terracotta">AI</span></Link>
-          <span className="flex items-center gap-1 rounded-full border border-ivory/30 bg-navy/30 px-3 py-2 text-xs font-semibold"><MapPin size={14} /> Cebu, Philippines</span>
-        </header>
-        <section className="auth-signup-card my-8 flex-1 rounded-[2rem] p-6 sm:p-8">
+        <div className="px-5">
+          <header className="flex items-center justify-between text-white">
+            <Link to="/" className="font-display text-lg font-bold tracking-tight text-white drop-shadow-xs">
+              Laag ta <span className="italic">bAI</span>
+            </Link>
+            <span className="flex items-center gap-1 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-black shadow-xs"><MapPin size={14} /> Cebu, Philippines</span>
+          </header>
+          <p className="font-display mt-6 mb-4 max-w-[18rem] text-[2rem] leading-[1.06] font-bold tracking-tight text-white drop-shadow-sm">
+            Go where the map <span className="italic">runs out.</span>
+          </p>
+        </div>
+        <section className="auth-signup-card mt-auto flex-1 rounded-t-[2rem] p-6 sm:p-8">
           {confirmEmail ? (
-            // Direct child of the card, so the unlayered `.auth-signup-card > .rounded-2xl`
-            // override gives it a dark surface (it beats the layered `bg-design-surface`
-            // utility) — keep the text explicitly ivory for contrast in both themes.
-            <p role="status" className="rounded-2xl border border-design-line bg-design-surface p-4 text-center text-ivory">Check <strong>{form.email}</strong> for a confirmation link, then sign in.</p>
+            <p role="status" className={`rounded-2xl border border-design-line bg-design-surface p-4 text-center ${isDay ? 'text-ink' : 'text-ivory'}`}>Check <strong>{form.email}</strong> for a confirmation link, then sign in.</p>
           ) : (
             <>
               {/* Form header */}
-              <h1 className="auth-signup-heading text-center text-3xl font-extrabold">Create Account</h1>
-              <p className="mt-2 text-center text-ivory">Get started.</p>
+              <h1 className="auth-signup-heading font-display text-center text-3xl font-bold">Create Account</h1>
+              <p className={`mt-1 text-center text-sm ${isDay ? 'text-ink-muted' : 'text-ivory/80'}`}>Get started.</p>
               {auth.mode === 'dev' && <div className="mt-4"><DevSignIn tone="notice" /></div>}
 
               {/* Registration form */}
@@ -254,7 +259,7 @@ export default function SignUpPage() {
                     <button type="button" className="touch-target absolute right-0 top-1 flex items-center px-3" aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}</button>
                   </span>
                   <span className="mt-2 grid gap-1 text-xs" aria-live="polite">
-                    {passwordRules.map(([label, valid]) => <span key={label} className={valid ? 'text-success' : 'text-ivory'}>{valid ? <Check size={14} className="mr-1 inline" /> : <X size={14} className="mr-1 inline" />}{label}</span>)}
+                    {passwordRules.map(([label, valid]) => <span key={label} className={valid ? 'text-success' : isDay ? 'text-ink-muted' : 'text-ivory'}>{valid ? <Check size={14} className="mr-1 inline" /> : <X size={14} className="mr-1 inline" />}{label}</span>)}
                   </span>
                 </label>
                 <label className="auth-label block">Confirm password <span aria-hidden="true">*</span>
@@ -264,10 +269,10 @@ export default function SignUpPage() {
                   </span>
                   {form.confirmPassword && <span className={`auth-password-status mt-1 block ${confirmValid ? 'text-success' : 'text-error'}`}>{confirmValid ? 'Passwords match' : 'Passwords do not match'}</span>}
                 </label>
-                <label className="auth-label block">Bio <span className="text-ivory">(optional)</span>
-                  <textarea maxLength={240} value={form.bio} onChange={(e) => update('bio', e.target.value)} className="mt-1 min-h-16 w-full rounded-xl border border-design-line bg-design-surface p-3 text-ivory text-base outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/30" />
+                <label className="auth-label block">Bio <span className={isDay ? 'text-ink-muted' : 'text-ivory'}>(optional)</span>
+                  <textarea maxLength={240} value={form.bio} onChange={(e) => update('bio', e.target.value)} className={`mt-1 min-h-16 w-full rounded-xl border border-design-line bg-design-surface p-3 text-base outline-none focus:border-navy focus:ring-2 focus:ring-navy/20 ${isDay ? 'text-ink' : 'text-ivory'}`} />
                 </label>
-                <label className="flex min-h-12 items-center gap-3 text-sm text-terracotta">
+                <label className={`flex min-h-12 items-center gap-3 text-sm ${isDay ? 'text-ink-body' : 'text-ivory/85'}`}>
                   <input type="checkbox" checked={form.acceptedTerms} onChange={(e) => update('acceptedTerms', e.target.checked)} className={`auth-terms-checkbox h-5 w-5 accent-primary ${submitted && !form.acceptedTerms ? 'auth-terms-checkbox-invalid' : ''}`} />
                   <span>I agree to the <a href="/terms" target="_blank" rel="noreferrer" className="font-semibold underline">Terms</a> and <a href="/privacy" target="_blank" rel="noreferrer" className="font-semibold underline">Privacy Policy</a>. <span aria-hidden="true">*</span></span>
                 </label>
@@ -275,12 +280,12 @@ export default function SignUpPage() {
                 {error && <p role="alert" className="text-sm font-semibold text-error">{error}</p>}
 
                 {/* Primary action */}
-                <button type="submit" disabled={busy} className="touch-target w-full rounded-xl bg-terracotta font-bold tracking-wide text-ivory disabled:opacity-60">{busy ? 'Creating account…' : 'Create account'}</button>
+                <button type="submit" disabled={busy} className="touch-target w-full rounded-xl bg-navy font-bold tracking-wide text-on-navy disabled:opacity-60">{busy ? 'Creating account…' : 'Create account'}</button>
               </form>
 
               {/* Secondary authentication option */}
-              <div className="my-5 flex items-center gap-3 text-xs text-ivory"><span className="h-px flex-1 bg-design-line" />OR<span className="h-px flex-1 bg-design-line" /></div>
-              <button type="button" disabled={auth.mode === 'dev' || busy} onClick={() => { setOauthError(null); void auth.signInWithGoogle().catch((e) => setOauthError(e instanceof Error ? e.message : 'Google sign-up failed.')) }} className="auth-google-button touch-target flex w-full items-center justify-center gap-3 rounded-lg font-semibold disabled:opacity-60">
+              <div className={`my-5 flex items-center gap-3 text-xs ${isDay ? 'text-ink-muted' : 'text-ivory'}`}><span className="h-px flex-1 bg-design-line" />OR<span className="h-px flex-1 bg-design-line" /></div>
+              <button type="button" disabled={auth.mode === 'dev' || busy} onClick={() => { setOauthError(null); void auth.signInWithGoogle().catch((e) => setOauthError(e instanceof Error ? e.message : 'Google sign-up failed.')) }} className="auth-google-button touch-target flex w-full items-center justify-center gap-3 rounded-xl font-semibold disabled:opacity-60">
                 <GoogleIcon />
                 Continue with Google
               </button>
@@ -289,7 +294,7 @@ export default function SignUpPage() {
           )}
 
           {/* Sign-in footer */}
-          <p className="mt-6 text-center text-sm text-ivory">Already have an account? <Link to="/login" className="font-bold text-terracotta underline">Sign in</Link></p>
+          <p className={`mt-6 text-center text-sm ${isDay ? 'text-ink-body' : 'text-ivory'}`}>Already have an account? <Link to="/login" className="font-bold underline">Sign in</Link></p>
         </section>
       </div>
     </main>

@@ -12,7 +12,10 @@
   --color-crimson: #b71c1c;
   --color-cream: #fffdf4;
   --color-leaf: #4caf50;
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Playfair Display', 'Instrument Serif', Georgia, serif;
+  --font-serif-editorial: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* Semantic tokens that switch with the theme (SRS 3.1.6.2.a, 3.7.1.5). */
@@ -107,67 +110,61 @@
 :root,
 [data-theme='light'],
 [data-palette='light'] {
-  --ds-ivory: #faf5ec;
-  --ds-ivory-deep: #f2ebdd;
-  --ds-surface: #fffdf8;
-  --ds-line: #e3dccd;
-  --ds-line-strong: #8f8878;
-  --ds-navy: #243b53;
-  --ds-navy-pressed: #1a2c3f;
-  --ds-navy-soft: #e5e2dd;
-  --ds-on-navy: var(--ds-ivory);
-  --ds-ink: var(--ds-navy);
-  --ds-ink-body: #3d5166;
-  --ds-ink-muted: #536170;
-  --ds-ink-faint: #8a96a1;
-  --ds-sage: #9baf9a;
-  --ds-sage-soft: #dee0d3;
-  --ds-sage-deep: #4d654d;
-  --ds-terracotta: #c66b4e;
-  --ds-terracotta-ink: #9f4b31;
-  --ds-terracotta-soft: #f3e2d6;
-  /* Not a Figma variable yet: the raw #EFAE97 the auth screens use for labels and links on the navy card. */
-  --ds-terracotta-light: #efae97;
-  --ds-danger: #a8322a;
-  --ds-danger-soft: #f7e1dc;
-  --ds-danger-line: #e3b3aa;
-  --ds-shadow-tabbar: 0 -5px 10px 0 rgb(36 59 83 / 0.08);
-  --ds-shadow-topbar: 0 5px 10px 0 rgb(36 59 83 / 0.08);
-  --ds-shadow-navy: 0 10px 15px -3px rgb(36 59 83 / 0.25), 0 4px 6px -4px rgb(36 59 83 / 0.2);
+  --ds-ivory: #ffffff;
+  --ds-ivory-deep: #f4f5f7;
+  --ds-surface: #ffffff;
+  --ds-line: #ebebef;
+  --ds-line-strong: #d1d5db;
+  --ds-navy: #111111;
+  --ds-navy-pressed: #27272a;
+  --ds-navy-soft: #f3f4f6;
+  --ds-on-navy: #ffffff;
+  --ds-ink: #111111;
+  --ds-ink-body: #374151;
+  --ds-ink-muted: #6b7280;
+  --ds-ink-faint: #9ca3af;
+  --ds-sage: #9ca3af;
+  --ds-sage-soft: #f3f4f6;
+  --ds-sage-deep: #1f2937;
+  --ds-terracotta: #111111;
+  --ds-terracotta-ink: #111111;
+  --ds-terracotta-soft: #f3f4f6;
+  --ds-terracotta-light: #e5e7eb;
+  --ds-danger: #b91c1c;
+  --ds-danger-soft: #fef2f2;
+  --ds-danger-line: #fecaca;
+  --ds-shadow-tabbar: 0 -4px 20px 0 rgb(17 17 17 / 0.06);
+  --ds-shadow-topbar: 0 4px 14px 0 rgb(17 17 17 / 0.06);
+  --ds-shadow-navy: 0 10px 24px -4px rgb(17 17 17 / 0.14), 0 4px 8px -4px rgb(17 17 17 / 0.08);
 }
 
-/*
- * Provisional dark values: Figma has no dark mode for Ivory + Sage yet. Derived from the same
- * hues so every text pair still meets WCAG AA. Navy fills invert to a light navy with dark
- * text. Replace with the designer's values once they exist.
- */
 [data-theme='dark'] {
-  --ds-ivory: #121a24;
-  --ds-ivory-deep: #0c121a;
-  --ds-surface: #1b2633;
-  --ds-line: #2c3a4a;
-  --ds-line-strong: #7f8c9a;
-  --ds-navy: #dbe5ef;
-  --ds-navy-pressed: #c2d0de;
-  --ds-navy-soft: #26364a;
-  --ds-on-navy: #121a24;
-  --ds-ink: #faf5ec;
-  --ds-ink-body: #d3dbe3;
-  --ds-ink-muted: #a7b2bd;
-  --ds-ink-faint: #6b7885;
-  --ds-sage: #9baf9a;
-  --ds-sage-soft: #2b3a31;
-  --ds-sage-deep: #b9cdb8;
-  --ds-terracotta: #d98a6e;
-  --ds-terracotta-ink: #eca88f;
-  --ds-terracotta-soft: #3a2a22;
-  --ds-terracotta-light: #efae97;
-  --ds-danger: #f2958a;
-  --ds-danger-soft: #3a1f1c;
-  --ds-danger-line: #7a3b34;
-  --ds-shadow-tabbar: 0 -5px 10px 0 rgb(0 0 0 / 0.35);
-  --ds-shadow-topbar: 0 5px 10px 0 rgb(0 0 0 / 0.35);
-  --ds-shadow-navy: 0 10px 15px -3px rgb(0 0 0 / 0.45), 0 4px 6px -4px rgb(0 0 0 / 0.35);
+  --ds-ivory: #111113;
+  --ds-ivory-deep: #18181b;
+  --ds-surface: #1c1c20;
+  --ds-line: #27272a;
+  --ds-line-strong: #3f3f46;
+  --ds-navy: #fafafa;
+  --ds-navy-pressed: #e4e4e7;
+  --ds-navy-soft: #27272a;
+  --ds-on-navy: #111113;
+  --ds-ink: #fafafa;
+  --ds-ink-body: #d4d4d8;
+  --ds-ink-muted: #a1a1aa;
+  --ds-ink-faint: #71717a;
+  --ds-sage: #71717a;
+  --ds-sage-soft: #27272a;
+  --ds-sage-deep: #e4e4e7;
+  --ds-terracotta: #f4f4f5;
+  --ds-terracotta-ink: #fafafa;
+  --ds-terracotta-soft: #27272a;
+  --ds-terracotta-light: #d4d4d8;
+  --ds-danger: #f87171;
+  --ds-danger-soft: #2f1515;
+  --ds-danger-line: #7f1d1d;
+  --ds-shadow-tabbar: 0 -4px 20px 0 rgb(0 0 0 / 0.4);
+  --ds-shadow-topbar: 0 4px 14px 0 rgb(0 0 0 / 0.4);
+  --ds-shadow-navy: 0 10px 24px -4px rgb(0 0 0 / 0.5), 0 4px 8px -4px rgb(0 0 0 / 0.35);
 }
 
 html,
@@ -183,8 +180,8 @@ html {
 
 body {
   margin: 0;
-  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%) fixed;
-  color: var(--fg);
+  background: linear-gradient(180deg, var(--ds-ivory) 0%, var(--ds-ivory-deep) 100%) fixed;
+  color: var(--ds-ink);
   font-family: var(--font-sans);
   -webkit-tap-highlight-color: transparent;
 }
@@ -195,9 +192,9 @@ body {
   min-height: 48px;
 }
 
-/* Room for the tab bar plus the Scan disc's 17px overhang, so no content sits behind them. */
+/* Room for the floating pill tab bar plus safe-area inset, so no content sits behind it. */
 :root {
-  --nav-clearance: calc(var(--spacing-tabbar) + 26px + env(safe-area-inset-bottom));
+  --nav-clearance: calc(var(--spacing-tabbar) + 32px + env(safe-area-inset-bottom));
 }
 
 .pb-nav {
@@ -246,12 +243,12 @@ body {
  * Keep this below the existing styles while the screens are migrated.
  */
 :root {
-  --artifact-ivory: #f7f3ea;
-  --artifact-navy: #243b53;
-  --artifact-sage: #a9b7a5;
-  --artifact-sage-dark: #536b58;
-  --artifact-terracotta: #c66a4e;
-  --artifact-line: #d8d1c5;
+  --artifact-ivory: #ffffff;
+  --artifact-navy: #111111;
+  --artifact-sage: #9ca3af;
+  --artifact-sage-dark: #374151;
+  --artifact-terracotta: #111111;
+  --artifact-line: #e5e7eb;
 }
 
 @theme {
@@ -263,8 +260,8 @@ body {
   --color-artifact-line: #d8d1c5;
 
   /* Ivory, navy, sage, terracotta and ink are defined once above via --ds-*, so they follow the theme. */
-  --color-design-surface: #faf5ec;
-  --color-design-line: #d8d1c5;
+  --color-design-surface: #f4f5f7;
+  --color-design-line: #e5e7eb;
   /* Navy darkened for the night-mode card base (navy 72% + black 28%). */
   --color-navy-deep: #1a2a3c;
   --color-error: #ff7b72;
@@ -294,11 +291,11 @@ body {
 }
 
 [data-theme='dark'] .artifact-splash {
-  --artifact-ivory: #151d29;
-  --artifact-navy: #f7f3ea;
-  --artifact-line: #536b58;
-  --artifact-sage: #a9b7a5;
-  --artifact-terracotta: #e89a7d;
+  --artifact-ivory: #111113;
+  --artifact-navy: #fafafa;
+  --artifact-line: #27272a;
+  --artifact-sage: #71717a;
+  --artifact-terracotta: #fafafa;
 }
 
 [data-theme='dark'] .artifact-splash-logo,
@@ -332,7 +329,7 @@ body {
   width: 40%;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--artifact-terracotta), var(--artifact-sage));
+  background: var(--artifact-navy);
   animation: artifact-progress 1.5s ease-in-out infinite;
 }
 

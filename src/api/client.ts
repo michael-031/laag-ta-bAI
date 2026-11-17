@@ -1,4 +1,5 @@
 import { env } from '@/lib/env'
+import { demoApiFallback, DemoNotFoundError } from './demoData'
 import type {
   AuthResult,
   ChatMessage,
@@ -39,11 +40,24 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 /**
  * Fetch wrapper: JSON in/out, bearer auth, and retry with exponential backoff
  * on network errors and 502/503/504 (SRS 3.3.1.3, up to 3 attempts).
+ * Outside test mode, falls back to built-in Cebu heritage & AI demo data when no backend is reachable.
  */
 export async function apiRequest<T>(path: string, options: RequestOptions = {}, attempts = 3): Promise<T> {
+  const isTest = import.meta.env.MODE === 'test'
   const headers: Record<string, string> = {}
   if (options.token) headers.Authorization = `Bearer ${options.token}`
   if (options.json !== undefined) headers['Content-Type'] = 'application/json'
+
+  const runFallback = async (): Promise<T> => {
+    try {
+      return await demoApiFallback<T>(path, options)
+    } catch (error) {
+      if (error instanceof DemoNotFoundError) {
+        throw new ApiError(404, 'not_found', error.message)
+      }
+      throw error
+    }
+  }
 
   let lastError: unknown
   for (let attempt = 0; attempt < attempts; attempt++) {
@@ -58,6 +72,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}, 
       })
     } catch (error) {
       if (options.signal?.aborted) throw error
+      if (!isTest) return runFallback()
       lastError = new ApiError(0, 'network_error', "Can't reach the server. Check your connection and try again.")
       continue
     }
@@ -69,9 +84,11 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}, 
 
     const body = await response.json().catch(() => null)
     if (!response.ok) {
+      if (!isTest && body === null) return runFallback()
       const error = body?.error ?? {}
       throw new ApiError(response.status, error.code ?? 'error', error.message ?? 'Something went wrong.')
     }
+    if (!isTest && body === null) return runFallback()
     return (body as { data: T }).data
   }
   throw lastError

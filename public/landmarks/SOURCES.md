@@ -1,15 +1,16 @@
-# Placeholder image sources
+# Image sources & attributions
 
-Copied from the team's reference prototype (`Reference_LaagtabAI/main/assets/placeholder`).
-These are third-party photos used for development only. Replace them with
-photos the team owns or that carry a compatible license before a public release.
+All photographs below are licensed Cebu heritage and coastal images sourced from Wikimedia Commons (CC0 / CC BY 4.0 / CC BY-SA 4.0):
 
-| File | Source |
-|------|--------|
-| yap.jpg | https://guidetothephilippines.ph/destinations-and-attractions/yap-san-diego-ancestral-house |
-| heritage.jpg | https://guidetothephilippines.ph/destinations-and-attractions/heritage-of-cebu-monument |
-| casa.jpg | https://guidetothephilippines.ph/destinations-and-attractions/casa-gorordo-museum |
-| magellan.jpg | https://en.wikipedia.org/wiki/Magellan%27s_Cross_Pavilion |
-| fort.jpg | https://en.wikipedia.org/wiki/Fort_San_Pedro |
-| basilica.jpg | https://guidetothephilippines.ph/destinations-and-attractions/basilica-minore-del-santo-nino |
-| museo.jpg | https://en.wikipedia.org/wiki/Museo_Sugbo |
+| File | Subject | Source & License |
+|------|---------|------------------|
+| `basilica.jpg` | Basílica Minore del Santo Niño de Cebu | Patrickroque01 — Wikimedia Commons (CC BY-SA 4.0) |
+| `casa.jpg` | Casa Gorordo Museum | CharMel Creations — Wikimedia Commons (CC BY-SA 4.0) |
+| `fort.jpg` | Plaza Independencia & Fort San Pedro | Patrickroque01 — Wikimedia Commons (CC BY-SA 4.0) |
+| `heritage.jpg` | Heritage of Cebu Monument in Parian | Claudio monceda — Wikimedia Commons (CC BY-SA 4.0) |
+| `magellan.jpg` | Magellan's Cross Pavilion | Philip Nalangan — Wikimedia Commons (CC BY 4.0) |
+| `museo.jpg` | Museo Sugbo | Patrickroque01 — Wikimedia Commons (CC BY-SA 4.0) |
+| `yap.jpg` | Yap-Sandiego Ancestral House | Subhashish Panigrahi — Wikimedia Commons (CC BY-SA 4.0) |
+| `../onboarding/bridge.webp` | Aerial view of Cebu Island | Vyacheslav Argenberg — Wikimedia Commons (CC BY 4.0) |
+| `../authenticationBG/LoginDay.webp`, `RegisterDay.webp` | Bantayan Island, Cebu coast | Dennisj73 — Wikimedia Commons (CC BY-SA 4.0) |
+| `../authenticationBG/LoginNight.webp`, `RegisterNight.webp` | Cebu City Temple at dusk | Wide Awake! — Wikimedia Commons (CC BY 4.0) |

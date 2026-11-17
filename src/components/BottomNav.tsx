@@ -24,31 +24,35 @@ const TABS: Tab[] = [
 ]
 
 /**
- * Thumb-reach bottom navigation (SRS 3.2.1.1), built from the Figma ScreenNavbar component
- * (Components page, node 151:122). The focused tab gets a filled navy icon and a visible label;
- * the others show an outline icon in ink-muted and keep their label for screen readers only.
+ * Floating glassmorphic pill navigation inspired by modern consumer travel apps.
+ * The active tab displays a soft pill highlight, filled icon, and visible label;
+ * inactive tabs show an outline icon and keep their label as sr-only for screen readers.
  */
 export function BottomNav() {
   const { pathname } = useLocation()
   const current = TABS.findIndex((t) => t.to === pathname)
-  // Tells the CSS which way to slide: towards the tab's side of the bar. Re-tapping the current tab doesn't animate.
   const onNavigate = (index: number) => {
     document.documentElement.setAttribute('data-tab-direction', index < current ? 'back' : 'forward')
   }
+
   return (
-    <nav
-      aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-md items-center justify-between rounded-t-chrome bg-ivory-surface px-4 shadow-tabbar [view-transition-name:bottom-nav] min-[375px]:px-6"
-      style={{ height: 'calc(var(--spacing-tabbar) + env(safe-area-inset-bottom))', paddingBottom: 'env(safe-area-inset-bottom)' }}
+    <div
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-md justify-center px-3 [view-transition-name:bottom-nav]"
+      style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
     >
-      {TABS.map((tab, i) =>
-        tab.to === '/scan' ? (
-          <ScanTab key={tab.to} tab={tab} animate={i !== current} onClick={() => onNavigate(i)} />
-        ) : (
-          <TabLink key={tab.to} tab={tab} animate={i !== current} onClick={() => onNavigate(i)} />
-        ),
-      )}
-    </nav>
+      <nav
+        aria-label="Main"
+        className="pointer-events-auto flex w-full items-center justify-between gap-1 rounded-full border border-ivory-line/90 bg-ivory-surface/90 px-2 py-1.5 shadow-navy backdrop-blur-xl"
+      >
+        {TABS.map((tab, i) =>
+          tab.to === '/scan' ? (
+            <ScanTab key={tab.to} tab={tab} animate={i !== current} onClick={() => onNavigate(i)} />
+          ) : (
+            <TabLink key={tab.to} tab={tab} animate={i !== current} onClick={() => onNavigate(i)} />
+          ),
+        )}
+      </nav>
+    </div>
   )
 }
 
@@ -59,14 +63,20 @@ function TabLink({ tab, animate, onClick }: { tab: Tab; animate: boolean; onClic
       end={tab.to === '/'}
       viewTransition={animate}
       onClick={onClick}
-      className="flex min-h-12 min-w-12 flex-col items-center justify-center gap-1 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy"
+      className={({ isActive }) =>
+        `flex min-h-12 min-w-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-full px-1.5 py-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy ${
+          isActive ? 'bg-navy-soft/80 text-navy' : 'text-ink-muted hover:text-navy'
+        }`
+      }
     >
       {({ isActive }) => {
         const Icon = isActive ? tab.activeIcon : tab.icon
         return (
           <>
-            <Icon size={isActive ? 28 : 24} className={isActive ? 'text-navy' : 'text-ink-muted'} />
-            <span className={isActive ? 'text-xs font-bold whitespace-nowrap text-navy' : 'sr-only'}>{tab.label}</span>
+            <Icon size={22} className={isActive ? 'text-navy' : 'text-ink-muted'} />
+            <span className={isActive ? 'text-[0.6875rem] leading-none font-bold whitespace-nowrap text-navy' : 'sr-only'}>
+              {tab.label}
+            </span>
           </>
         )
       }}
@@ -74,21 +84,29 @@ function TabLink({ tab, animate, onClick }: { tab: Tab; animate: boolean; onClic
   )
 }
 
-/** The raised Scan button: a navy disc that overlaps the top edge of the bar by 17px, as in Figma. */
+/** Center Lens / Camera Scan pill disc integrated cleanly inside the floating dock. */
 function ScanTab({ tab, animate, onClick }: { tab: Tab; animate: boolean; onClick: () => void }) {
   return (
     <NavLink
       to={tab.to}
       viewTransition={animate}
       onClick={onClick}
-      className="group -mt-[17px] flex flex-col items-center gap-1 self-start rounded-full focus-visible:outline-none"
+      className="group flex min-h-12 min-w-12 flex-col items-center justify-center gap-0.5 rounded-full px-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy"
     >
       {({ isActive }) => (
         <>
-          <span className="flex size-scan-button items-center justify-center rounded-full border-4 border-ivory bg-navy text-on-navy shadow-navy group-active:bg-navy-pressed group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-navy">
-            <tab.icon size={30} />
+          <span
+            className={`flex size-12 items-center justify-center rounded-full shadow-navy transition-transform group-active:scale-95 ${
+              isActive
+                ? 'bg-terracotta text-ivory ring-2 ring-navy/20'
+                : 'bg-navy text-on-navy group-hover:bg-navy-pressed'
+            }`}
+          >
+            <tab.icon size={24} />
           </span>
-          <span className={isActive ? 'text-xs font-bold text-navy' : 'sr-only'}>{tab.label}</span>
+          <span className={isActive ? 'text-[0.6875rem] leading-none font-bold text-terracotta-ink' : 'sr-only'}>
+            {tab.label}
+          </span>
         </>
       )}
     </NavLink>

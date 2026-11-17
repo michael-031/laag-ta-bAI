@@ -3,14 +3,16 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { ApiError } from '@/api/client'
 import { useCheckIn, useLandmark } from '@/api/hooks'
 import {
+  ArrowBackIcon,
   BookmarkIcon,
   BookmarkOutlineIcon,
   CameraOutlineIcon,
   ChatbubbleEllipsesIcon,
+  CheckmarkCircleIcon,
   CheckmarkIcon,
   LocationOutlineIcon,
   PauseIcon,
-  SparklesIcon,
+  ShareSocialOutlineIcon,
   StarIcon,
   VolumeHighOutlineIcon,
 } from '@/components/icons/ionicons'
@@ -19,16 +21,16 @@ import { focus, TopNavbar } from '@/components/TopNavbar'
 import { useAuth } from '@/features/auth/AuthContext'
 import { useBookmarks } from '@/features/bookmarks/useBookmarks'
 import { useSpeech } from '@/hooks/useSpeech'
-import { formatFee } from '@/lib/format'
+import { CATEGORY_LABELS, formatFee } from '@/lib/format'
 
 /** Set by ScanPage when it navigates here after a match. */
 export type ScanMatchState = { confidence: number }
 
 const NO_STORY = { about: '', significance: '', architecture: '', trivia: '' }
-const button = `flex min-h-12 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold ${focus}`
-const secondary = `${button} border border-line-strong bg-ivory-surface text-ink`
+const button = `flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-bold ${focus}`
+const secondary = `${button} border border-ivory-line bg-ivory-surface text-ink transition-colors hover:bg-ivory-deep`
 
-/** Figma "Scan-to-Story Page - Landmark Details" (268:8180). */
+/** Pure white sheet-over-photo landmark detail view + sticky action bar (Image 6). */
 export default function LandmarkPage() {
   const { id } = useParams()
   const location = useLocation()
@@ -38,10 +40,12 @@ export default function LandmarkPage() {
   useEffect(() => {
     if (location.state) navigate(location.pathname, { replace: true, state: null })
   }, [location.state, location.pathname, navigate])
+
   const { bookmarks, isSaved, toggle } = useBookmarks()
   const auth = useAuth()
   const checkIn = useCheckIn()
   const query = useLandmark(id)
+  const [copiedLink, setCopiedLink] = useState(false)
 
   // Offline fallback: read the saved copy when the network request fails (SRS 3.6.3.2).
   const landmark = query.data ?? bookmarks.find((b) => b.id === id)
@@ -49,17 +53,22 @@ export default function LandmarkPage() {
   const speech = useSpeech([story.about, story.significance, story.architecture, story.trivia].join(' '))
 
   const saved = landmark ? isSaved(landmark.id) : false
-  const bookmark = landmark && (
-    <button
-      type="button"
-      onClick={() => toggle(landmark)}
-      aria-pressed={saved}
-      aria-label={saved ? 'Remove bookmark' : 'Save for offline reading'}
-      className={`touch-target flex items-center justify-center rounded-full ${saved ? 'text-terracotta' : 'text-navy'} ${focus}`}
-    >
-      {saved ? <BookmarkIcon /> : <BookmarkOutlineIcon />}
-    </button>
-  )
+
+  const handleShare = async () => {
+    if (!landmark) return
+    const shareData = {
+      title: landmark.name,
+      text: `Discover ${landmark.name} in ${landmark.district}, Cebu on Laag ta bAI`,
+      url: window.location.href,
+    }
+    if (navigator.share) {
+      await navigator.share(shareData).catch(() => {})
+      return
+    }
+    await navigator.clipboard?.writeText(window.location.href).catch(() => {})
+    setCopiedLink(true)
+    window.setTimeout(() => setCopiedLink(false), 2000)
+  }
 
   if (!landmark) {
     const notFound = query.error instanceof ApiError && query.error.status === 404
@@ -92,129 +101,185 @@ export default function LandmarkPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-ivory">
-      <TopNavbar title="Landmark Details" action={bookmark} />
-      <article>
-        {/* Pinned to the light palette: ivory text on a navy scrim reads on any photo in either theme. */}
-        <div data-palette="light" className="relative -mt-10 h-[22rem] overflow-hidden bg-sage-soft">
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col bg-ivory-surface text-ink">
+      <article className="flex flex-1 flex-col">
+        {/* Bright full-bleed hero image with floating white circular controls (Image 6) */}
+        <div data-palette="light" className="relative h-[20.5rem] overflow-hidden bg-ivory-deep">
           <LandmarkImage src={landmark.imageUrl} alt={`Photo of ${landmark.name}`} className="absolute inset-0 size-full" />
-          <div className="absolute inset-0 bg-linear-to-b from-navy/50 via-transparent via-35% to-navy/95" aria-hidden />
-          <div className="absolute inset-x-6 bottom-8 flex flex-col items-start">
+
+          <header className="relative z-10 flex items-center justify-between px-4 pt-[max(1rem,env(safe-area-inset-top))]">
+            <button
+              type="button"
+              onClick={() => (location.key === 'default' ? navigate('/') : navigate(-1))}
+              aria-label="Go back"
+              className={`touch-target flex size-12 items-center justify-center rounded-full bg-white text-black shadow-md transition-transform active:scale-95 ${focus}`}
+            >
+              <ArrowBackIcon size={20} />
+            </button>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label={copiedLink ? 'Link copied' : 'Share landmark'}
+                className={`touch-target flex size-12 items-center justify-center rounded-full bg-white text-black shadow-md transition-transform active:scale-95 ${focus}`}
+              >
+                {copiedLink ? <CheckmarkIcon size={20} /> : <ShareSocialOutlineIcon size={20} />}
+              </button>
+              <button
+                type="button"
+                onClick={() => toggle(landmark)}
+                aria-pressed={saved}
+                aria-label={saved ? 'Remove bookmark' : 'Save for offline reading'}
+                className={`touch-target flex size-12 items-center justify-center rounded-full bg-white text-black shadow-md transition-transform active:scale-95 ${focus}`}
+              >
+                {saved ? <BookmarkIcon size={20} /> : <BookmarkOutlineIcon size={20} />}
+              </button>
+            </div>
+          </header>
+
+          {/* Bottom-right photo index pill (Image 6) */}
+          <span className="absolute right-4 bottom-10 z-10 rounded-full bg-black/60 px-3 py-1 font-mono text-xs font-semibold text-white backdrop-blur-sm">
+            1/3
+          </span>
+        </div>
+
+        {/* Pure white overlapping rounded sheet (Image 6) */}
+        <div className="relative z-10 -mt-7 flex flex-1 flex-col gap-7 rounded-t-[2rem] bg-ivory-surface px-6 pt-7 pb-8">
+          <div className="flex flex-col gap-1.5">
             {match && (
-              <p className="flex items-center gap-1.5 rounded-full bg-sage-deep/90 px-3 py-1.5 text-xs font-bold tracking-[0.08em] text-ivory uppercase backdrop-blur-sm">
+              <p className="mb-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-ivory-deep px-3 py-1 font-mono text-xs font-semibold text-ink">
                 <CheckmarkIcon size={14} />
                 Landmark matched · {Math.round(match.confidence * 100)}%
               </p>
             )}
-            <h1 className="pt-3 text-4xl font-extrabold tracking-tight text-ivory">{landmark.name}</h1>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-base text-ivory">
-              <p className="flex items-center gap-1.5">
-                <LocationOutlineIcon size={16} />
-                {landmark.district}
-              </p>
-              <p className="flex items-center gap-1 rounded-full bg-ivory-surface px-2.5 py-0.5 text-sm font-bold text-ink">
-                <StarIcon size={14} className="text-terracotta" />
+
+            <h1 className="font-display text-3xl leading-tight font-bold tracking-tight text-ink">
+              {landmark.name}
+              <CheckmarkCircleIcon size={18} className="ml-1.5 inline-block align-middle text-ink" />
+            </h1>
+
+            <p className="text-sm text-ink-muted">{CATEGORY_LABELS[landmark.category] ?? landmark.category}</p>
+
+            {/* Rating & Hours single line (Image 6) */}
+            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 pt-1 text-sm">
+              <span className="inline-flex items-center gap-1 font-mono font-bold text-ink">
+                <StarIcon size={14} className="text-ink" />
                 <span aria-hidden>{landmark.rating.toFixed(1)}</span>
                 <span className="sr-only">Rated {landmark.rating.toFixed(1)} out of 5</span>
-              </p>
+              </span>
+              <span className="font-mono text-xs text-ink-muted">({landmark.visitCount.toLocaleString()})</span>
+              <span aria-hidden className="text-ink-muted">·</span>
+              <span className="font-semibold text-ink">Open</span>
+              <span className="text-ink-muted">- {landmark.visitingHours}</span>
+            </div>
+
+            {/* Light-gray rounded Location Pill Box (Image 6) */}
+            <div className="mt-2.5 flex items-center gap-2.5 rounded-xl bg-ivory-deep px-3.5 py-3 text-sm font-medium text-ink">
+              <LocationOutlineIcon size={17} className="shrink-0 text-ink" />
+              <span className="min-w-0 flex-1 truncate">{landmark.district}, Cebu</span>
             </div>
           </div>
-        </div>
 
-        <div className="relative -mt-5 flex flex-col gap-8 rounded-t-3xl bg-ivory px-6 pt-8 pb-10">
-          <Section eyebrow={match ? 'Scan to story' : 'Overview'} title="About">
-            <Text value={story.about} className="text-lg leading-7 text-ink" />
+          <Section eyebrow={match ? 'Scan to story' : undefined} title="About">
+            <Text value={story.about} className="text-[0.9375rem] leading-6 text-ink-body" />
+
             <dl className="mt-4 grid grid-cols-3 gap-2">
               <Fact value={`${landmark.estimatedVisitMinutes} min`} label="Typical visit" />
               <Fact value={formatFee(landmark.admissionFee)} label="Admission" />
               <Fact value={landmark.visitCount.toLocaleString()} label="Visits" />
             </dl>
-            <p className="mt-3 text-sm text-ink-muted">
-              <span className="font-bold text-ink">Open</span> {landmark.visitingHours}
-            </p>
+
             <div className="mt-4 flex gap-3">
               <Link to={`/landmarks/${landmark.id}/chat`} className={`${secondary} flex-1`}>
-                <ChatbubbleEllipsesIcon size={20} className="shrink-0 text-terracotta" /> Ask bAI, your guide
+                <ChatbubbleEllipsesIcon size={18} />
+                Ask bAI, your guide
               </Link>
               {speech.supported && (
                 <button
                   type="button"
                   onClick={speech.state === 'playing' ? speech.pause : speech.play}
                   aria-label={speech.state === 'playing' ? 'Pause narration' : 'Listen to the story'}
-                  className={`touch-target flex items-center justify-center rounded-xl bg-sage-soft text-sage-deep ${focus}`}
+                  className={`touch-target flex size-12 items-center justify-center rounded-full border border-ivory-line bg-ivory-surface text-ink transition-colors hover:bg-ivory-deep ${focus}`}
                 >
-                  {speech.state === 'playing' ? <PauseIcon size={20} /> : <VolumeHighOutlineIcon size={20} />}
+                  {speech.state === 'playing' ? <PauseIcon size={19} /> : <VolumeHighOutlineIcon size={19} />}
                 </button>
               )}
             </div>
           </Section>
 
-          <Section eyebrow="Why it matters" title="Significance">
+          <Section title="Significance">
             <Text value={story.significance} />
           </Section>
 
-          <Section eyebrow="Through the years" title="History">
-            {/* shortcut: one undated entry until the API returns dated history events; then map them here. */}
-            <ol className="border-l-2 border-sage pl-5">
+          <Section title="History">
+            <ol className="border-l-2 border-ivory-line pl-4">
               <li className="relative">
-                <span className="absolute top-1.5 -left-[1.6rem] size-3 rounded-full border-2 border-ivory bg-terracotta" aria-hidden />
+                <span className="absolute top-2 -left-[1.35rem] size-2.5 rounded-full bg-navy" aria-hidden />
                 <Text value={story.architecture} />
               </li>
             </ol>
           </Section>
 
-          <section aria-labelledby="trivia-title" className="rounded-3xl border-2 border-dashed border-terracotta/40 bg-terracotta-soft p-5">
-            <div className="flex items-center gap-3">
-              <span className="flex size-11 shrink-0 -rotate-6 items-center justify-center rounded-2xl bg-terracotta text-ivory-surface" aria-hidden>
-                <SparklesIcon size={22} />
-              </span>
-              <div>
-                <p className="text-xs font-bold tracking-[0.1em] text-terracotta-ink uppercase">Did you know?</p>
-                <h2 id="trivia-title" className="text-xl font-bold text-ink">
-                  Trivia
-                </h2>
-              </div>
+          <Section title="Trivia">
+            <div className="rounded-2xl bg-ivory-deep p-4">
+              <Text value={story.trivia} className="text-[0.9375rem] leading-6 text-ink" />
             </div>
-            <Text value={story.trivia} className="mt-3 text-lg leading-7 text-ink italic" />
-          </section>
+          </Section>
 
-          <Section eyebrow="Shop local" title="Nearby Stores">
-            {/* shortcut: empty until the API returns stores; split them into Affiliated partners and Popular nearby. */}
-            <p className="rounded-2xl border border-ivory-line bg-ivory-surface p-4 text-sm text-ink-body">
+          <Section title="Nearby Stores">
+            <p className="text-sm text-ink-muted">
               No stores are listed near {landmark.name} yet. Partner shops and local favourites will appear here.
             </p>
           </Section>
 
-          <div className="flex flex-col gap-3">
-            {/* A matched scan already records the visit, so check-in is only for landmarks opened by hand. */}
-            {auth.status === 'signed-in' && !match && (
-              <>
-                <button type="button" onClick={() => checkIn.mutate(landmark.id)} disabled={checkIn.isPending || checkIn.isSuccess} className={`${secondary} disabled:opacity-80`}>
-                  {checkIn.isSuccess ? 'Checked in' : "I'm here, check me in"}
-                </button>
-                {checkIn.isError && (
-                  <p role="alert" className="text-sm text-danger">
-                    Couldn't check you in. {checkIn.error.message}
-                  </p>
-                )}
-              </>
-            )}
-            <Link to="/scan" className={`${button} min-h-13 bg-navy text-on-navy shadow-navy active:bg-navy-pressed`}>
-              <CameraOutlineIcon size={19} /> Scan another landmark
-            </Link>
-          </div>
+          {auth.status === 'signed-in' && !match && (
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() => checkIn.mutate(landmark.id)}
+                disabled={checkIn.isPending || checkIn.isSuccess}
+                className={`${secondary} w-full disabled:opacity-80`}
+              >
+                {checkIn.isSuccess ? 'Checked in' : "I'm here, check me in"}
+              </button>
+              {checkIn.isError && (
+                <p role="alert" className="text-sm text-danger">
+                  Couldn&apos;t check you in. {checkIn.error.message}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </article>
+
+      {/* Pure White Sticky Bottom Action Bar (Image 6) */}
+      <footer
+        className="sticky bottom-0 z-20 flex items-center justify-between gap-4 border-t border-ivory-line bg-ivory-surface px-6 pt-3.5"
+        style={{ paddingBottom: 'max(0.875rem, env(safe-area-inset-bottom))' }}
+      >
+        <div className="min-w-0">
+          <p className="font-mono text-sm font-bold text-ink">{formatFee(landmark.admissionFee)} entry</p>
+          <p className="truncate font-mono text-xs text-ink-muted">{landmark.estimatedVisitMinutes} min visit</p>
+        </div>
+        <Link
+          to="/scan"
+          className={`${button} shrink-0 bg-navy text-on-navy transition-colors hover:bg-navy-pressed`}
+        >
+          <CameraOutlineIcon size={17} />
+          Scan another landmark
+        </Link>
+      </footer>
     </div>
   )
 }
 
-function Section({ eyebrow, title, children }: { eyebrow: string; title: string; children: ReactNode }) {
+function Section({ eyebrow, title, children }: { eyebrow?: string; title: string; children: ReactNode }) {
   const id = `${title.toLowerCase().replace(/\s+/g, '-')}-title`
   return (
     <section aria-labelledby={id} className="border-t border-ivory-line pt-6 first:border-0 first:pt-0">
-      <p className="text-xs font-bold tracking-[0.1em] text-terracotta-ink uppercase">{eyebrow}</p>
-      <h2 id={id} className="pb-3 text-xl font-bold text-ink">
+      {eyebrow && <p className="mb-1 text-xs font-semibold text-ink-muted">{eyebrow}</p>}
+      <h2 id={id} className="font-display pb-2 text-xl font-bold text-ink">
         {title}
       </h2>
       {children}
@@ -223,19 +288,19 @@ function Section({ eyebrow, title, children }: { eyebrow: string; title: string;
 }
 
 /** Story text capped near 70 characters a line, with a note when that part isn't written yet. */
-function Text({ value, className = 'text-base leading-7 text-ink-body' }: { value: string; className?: string }) {
+function Text({ value, className = 'text-[0.9375rem] leading-6 text-ink-body' }: { value: string; className?: string }) {
   return value.trim() ? (
     <p className={`max-w-[65ch] ${className}`}>{value}</p>
   ) : (
-    <p className="text-sm text-ink-muted italic">This part of the story hasn't been written yet.</p>
+    <p className="text-sm text-ink-muted italic">This part of the story hasn&apos;t been written yet.</p>
   )
 }
 
 function Fact({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex flex-col-reverse items-center gap-1.5 rounded-xl bg-sage-soft px-2 py-4 text-center">
-      <dt className="text-xs text-ink-muted">{label}</dt>
-      <dd className="text-lg leading-6 font-bold text-ink">{value}</dd>
+    <div className="flex flex-col-reverse items-center gap-0.5 rounded-xl bg-ivory-deep px-2 py-3 text-center">
+      <dt className="text-[0.6875rem] text-ink-muted">{label}</dt>
+      <dd className="font-mono text-sm leading-6 font-bold text-ink">{value}</dd>
     </div>
   )
 }
@@ -244,12 +309,12 @@ function Skeleton() {
   return (
     <div role="status" className="animate-pulse">
       <span className="sr-only">Loading landmark</span>
-      <div className="-mt-10 h-[22rem] bg-sage-soft" aria-hidden />
-      <div className="-mt-5 flex flex-col gap-3 rounded-t-3xl bg-ivory px-6 pt-8" aria-hidden>
-        <div className="h-4 w-24 rounded bg-ivory-line" />
-        <div className="h-6 w-40 rounded bg-ivory-line" />
+      <div className="h-[20.5rem] bg-ivory-deep" aria-hidden />
+      <div className="-mt-7 flex flex-col gap-3 rounded-t-[2rem] bg-ivory-surface px-6 pt-8" aria-hidden>
+        <div className="h-6 w-48 rounded bg-ivory-deep" />
+        <div className="h-4 w-32 rounded bg-ivory-deep" />
         {[0, 1, 2].map((i) => (
-          <div key={i} className="h-4 rounded bg-ivory-line" />
+          <div key={i} className="h-4 rounded bg-ivory-deep" />
         ))}
       </div>
     </div>

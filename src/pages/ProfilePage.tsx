@@ -219,12 +219,6 @@ export default function ProfilePage() {
 
   return (
     <div className="bleed-under-nav relative min-h-dvh bg-ivory text-ink transition-colors duration-200">
-      {/* Decorative ambient washes, drawn with palette tokens so they follow the theme. */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -left-24 top-10 h-64 w-64 rounded-full bg-sage-soft/40 blur-3xl" />
-        <div className="absolute -right-24 top-1/3 h-72 w-72 rounded-full bg-terracotta-soft/40 blur-3xl" />
-      </div>
-
       <main className="relative z-10 mx-auto max-w-md px-4 pt-6 focus:outline-none">
         {/* Header Section */}
         <header className="mb-6">
