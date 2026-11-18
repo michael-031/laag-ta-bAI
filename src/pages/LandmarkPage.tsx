@@ -112,7 +112,7 @@ export default function LandmarkPage() {
               type="button"
               onClick={() => (location.key === 'default' ? navigate('/') : navigate(-1))}
               aria-label="Go back"
-              className={`touch-target flex size-12 items-center justify-center rounded-full bg-white text-black shadow-md transition-transform active:scale-95 ${focus}`}
+              className={`touch-target flex size-12 items-center justify-center rounded-full bg-ivory-surface/95 text-navy shadow-md transition-transform active:scale-95 ${focus}`}
             >
               <ArrowBackIcon size={20} />
             </button>
@@ -122,7 +122,7 @@ export default function LandmarkPage() {
                 type="button"
                 onClick={handleShare}
                 aria-label={copiedLink ? 'Link copied' : 'Share landmark'}
-                className={`touch-target flex size-12 items-center justify-center rounded-full bg-white text-black shadow-md transition-transform active:scale-95 ${focus}`}
+                className={`touch-target flex size-12 items-center justify-center rounded-full bg-ivory-surface/95 text-navy shadow-md transition-transform active:scale-95 ${focus}`}
               >
                 {copiedLink ? <CheckmarkIcon size={20} /> : <ShareSocialOutlineIcon size={20} />}
               </button>
@@ -131,7 +131,9 @@ export default function LandmarkPage() {
                 onClick={() => toggle(landmark)}
                 aria-pressed={saved}
                 aria-label={saved ? 'Remove bookmark' : 'Save for offline reading'}
-                className={`touch-target flex size-12 items-center justify-center rounded-full bg-white text-black shadow-md transition-transform active:scale-95 ${focus}`}
+                className={`touch-target flex size-12 items-center justify-center rounded-full shadow-md transition-transform active:scale-95 ${
+                  saved ? 'bg-terracotta text-on-navy' : 'bg-ivory-surface/95 text-navy'
+                } ${focus}`}
               >
                 {saved ? <BookmarkIcon size={20} /> : <BookmarkOutlineIcon size={20} />}
               </button>
@@ -139,7 +141,7 @@ export default function LandmarkPage() {
           </header>
 
           {/* Bottom-right photo index pill (Image 6) */}
-          <span className="absolute right-4 bottom-10 z-10 rounded-full bg-black/60 px-3 py-1 font-mono text-xs font-semibold text-white backdrop-blur-sm">
+          <span className="absolute right-4 bottom-10 z-10 rounded-full bg-navy/80 px-3 py-1 font-mono text-xs font-semibold text-white backdrop-blur-sm">
             1/3
           </span>
         </div>
@@ -148,7 +150,7 @@ export default function LandmarkPage() {
         <div className="relative z-10 -mt-7 flex flex-1 flex-col gap-7 rounded-t-[2rem] bg-ivory-surface px-6 pt-7 pb-8">
           <div className="flex flex-col gap-1.5">
             {match && (
-              <p className="mb-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-ivory-deep px-3 py-1 font-mono text-xs font-semibold text-ink">
+              <p className="mb-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-sage-soft px-3 py-1 font-mono text-xs font-semibold text-sage-deep">
                 <CheckmarkIcon size={14} />
                 Landmark matched · {Math.round(match.confidence * 100)}%
               </p>
@@ -156,7 +158,7 @@ export default function LandmarkPage() {
 
             <h1 className="font-display text-3xl leading-tight font-bold tracking-tight text-ink">
               {landmark.name}
-              <CheckmarkCircleIcon size={18} className="ml-1.5 inline-block align-middle text-ink" />
+              <CheckmarkCircleIcon size={18} className="ml-1.5 inline-block align-middle text-sage" />
             </h1>
 
             <p className="text-sm text-ink-muted">{CATEGORY_LABELS[landmark.category] ?? landmark.category}</p>
@@ -164,7 +166,7 @@ export default function LandmarkPage() {
             {/* Rating & Hours single line (Image 6) */}
             <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 pt-1 text-sm">
               <span className="inline-flex items-center gap-1 font-mono font-bold text-ink">
-                <StarIcon size={14} className="text-ink" />
+                <StarIcon size={14} className="text-terracotta" />
                 <span aria-hidden>{landmark.rating.toFixed(1)}</span>
                 <span className="sr-only">Rated {landmark.rating.toFixed(1)} out of 5</span>
               </span>
@@ -175,8 +177,8 @@ export default function LandmarkPage() {
             </div>
 
             {/* Light-gray rounded Location Pill Box (Image 6) */}
-            <div className="mt-2.5 flex items-center gap-2.5 rounded-xl bg-ivory-deep px-3.5 py-3 text-sm font-medium text-ink">
-              <LocationOutlineIcon size={17} className="shrink-0 text-ink" />
+            <div className="mt-2.5 flex items-center gap-2.5 rounded-xl bg-sage-soft/60 px-3.5 py-3 text-sm font-medium text-ink">
+              <LocationOutlineIcon size={17} className="shrink-0 text-terracotta-ink" />
               <span className="min-w-0 flex-1 truncate">{landmark.district}, Cebu</span>
             </div>
           </div>
@@ -222,7 +224,7 @@ export default function LandmarkPage() {
           </Section>
 
           <Section title="Trivia">
-            <div className="rounded-2xl bg-ivory-deep p-4">
+            <div className="rounded-2xl border border-terracotta/25 bg-terracotta-soft/70 p-4">
               <Text value={story.trivia} className="text-[0.9375rem] leading-6 text-ink" />
             </div>
           </Section>
@@ -264,7 +266,7 @@ export default function LandmarkPage() {
         </div>
         <Link
           to="/scan"
-          className={`${button} shrink-0 bg-navy text-on-navy transition-colors hover:bg-navy-pressed`}
+          className={`${button} shrink-0 bg-terracotta text-on-navy transition-colors hover:bg-terracotta-ink`}
         >
           <CameraOutlineIcon size={17} />
           Scan another landmark

@@ -66,7 +66,7 @@ export default function OnboardingPage() {
       >
         <div key={index} className="flex flex-1 flex-col animate-[fade-in_300ms_ease-out] motion-reduce:animate-none">
           {/* Bright full-bleed Cebu photography (Images 1 & 2) */}
-          <section data-palette="light" className="relative flex min-h-[56dvh] flex-col justify-between overflow-hidden bg-black px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-14 text-white">
+          <section data-palette="light" className="relative flex min-h-[56dvh] flex-col justify-between overflow-hidden bg-navy px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-14 text-white">
             <img
               src={slide.image}
               alt=""
@@ -74,7 +74,7 @@ export default function OnboardingPage() {
               className="absolute inset-0 size-full object-cover"
             />
             <div
-              className="absolute inset-0 bg-linear-to-b from-black/40 via-black/15 to-black/60"
+              className="absolute inset-0 bg-linear-to-b from-navy/60 via-navy/20 to-navy/75"
               aria-hidden
             />
 
@@ -127,7 +127,7 @@ export default function OnboardingPage() {
             >
               <span
                 className={`block h-2 rounded-full transition-all motion-reduce:transition-none ${
-                  i === index ? 'w-6 bg-navy' : 'w-2 bg-ivory-line'
+                  i === index ? 'w-6 bg-terracotta' : 'w-2 bg-ivory-line'
                 }`}
               />
             </button>

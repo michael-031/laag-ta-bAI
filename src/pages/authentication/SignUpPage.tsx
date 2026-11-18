@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Eye, EyeOff, MapPin, X } from 'lucide-react'
 import { Link, useNavigate } from 'react-router'
+import {
+  CalendarOutlineIcon,
+  CheckmarkIcon,
+  ChevronBackOutlineIcon,
+  ChevronDownOutlineIcon,
+  ChevronForwardOutlineIcon,
+  CloseOutlineIcon,
+  EyeOffOutlineIcon,
+  EyeOutlineIcon,
+  LocationOutlineIcon,
+} from '@/components/icons/ionicons'
 import { useAuth } from '@/features/auth/AuthContext'
 import { DevSignIn } from '@/features/auth/DevSignIn'
 import { usePreferences } from '@/features/preferences/PreferencesContext'
@@ -22,7 +32,7 @@ function CalendarSelect({ label, value, options, open, onToggle, onChange, isDis
     <div className="auth-calendar-select">
       <button type="button" aria-haspopup="listbox" aria-expanded={open} aria-label={label} onClick={onToggle} className="auth-calendar-select-button">
         <span>{options[value]}</span>
-        <ChevronDown size={14} aria-hidden="true" />
+        <ChevronDownOutlineIcon size={14} aria-hidden="true" />
       </button>
       {open && (
         <div className={`auth-calendar-select-menu ${label === 'Month' ? 'auth-calendar-select-menu-month' : 'auth-calendar-select-menu-year'}`}>
@@ -124,15 +134,15 @@ function CustomDatePicker({ value, onChange, invalid }: { value: string; onChang
         className={`auth-date-field ${invalid ? 'auth-date-field-invalid' : ''}`}
       >
         <span className={value ? 'text-ivory' : 'text-ivory'}>{formatDate(value) || 'mm/dd/yyyy'}</span>
-        <CalendarDays size={19} aria-hidden="true" />
+        <CalendarOutlineIcon size={19} aria-hidden="true" />
       </button>
       {open && (
         <div ref={calendarRef} className={`auth-calendar ${openAbove ? 'auth-calendar-above' : ''}`} role="dialog" aria-label="Choose date of birth">
           <div className="auth-calendar-toolbar">
             <CalendarSelect label="Month" value={viewDate.getMonth()} options={MONTHS} open={openSelect === 'month'} onToggle={() => setOpenSelect((current) => current === 'month' ? null : 'month')} isDisabled={isUnderageMonth} onChange={(month) => { setViewDate(clampViewDate(new Date(viewDate.getFullYear(), month, 1))); setOpenSelect(null) }} />
             <CalendarSelect label="Year" value={years.indexOf(viewDate.getFullYear())} options={years.map(String)} open={openSelect === 'year'} onToggle={() => setOpenSelect((current) => current === 'year' ? null : 'year')} onChange={(yearIndex) => { setViewDate(clampViewDate(new Date(years[yearIndex], viewDate.getMonth(), 1))); setOpenSelect(null) }} />
-            <button type="button" aria-label="Previous month" disabled={atMinMonth} onClick={() => setViewDate(clampViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1)))}><ChevronLeft size={18} /></button>
-            <button type="button" aria-label="Next month" disabled={atMaxMonth} onClick={() => setViewDate(clampViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1)))}><ChevronRight size={18} /></button>
+            <button type="button" aria-label="Previous month" disabled={atMinMonth} onClick={() => setViewDate(clampViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1)))}><ChevronBackOutlineIcon size={18} /></button>
+            <button type="button" aria-label="Next month" disabled={atMaxMonth} onClick={() => setViewDate(clampViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1)))}><ChevronForwardOutlineIcon size={18} /></button>
           </div>
           <div className="auth-calendar-grid" role="grid">
             {WEEKDAYS.map((weekday) => <span key={weekday} className="auth-calendar-weekday">{weekday}</span>)}
@@ -215,7 +225,7 @@ export default function SignUpPage() {
             <Link to="/" className="font-display text-lg font-bold tracking-tight text-white drop-shadow-xs">
               Laag ta <span className="italic">bAI</span>
             </Link>
-            <span className="flex items-center gap-1 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-black shadow-xs"><MapPin size={14} /> Cebu, Philippines</span>
+            <span className="flex items-center gap-1 rounded-full bg-ivory-surface/95 px-3 py-1.5 text-xs font-semibold text-navy shadow-xs"><LocationOutlineIcon size={14} className="text-terracotta" /> Cebu, Philippines</span>
           </header>
           <p className="font-display mt-6 mb-4 max-w-[18rem] text-[2rem] leading-[1.06] font-bold tracking-tight text-white drop-shadow-sm">
             Go where the map <span className="italic">runs out.</span>
@@ -256,16 +266,16 @@ export default function SignUpPage() {
                 <label className="auth-label block">Password <span aria-hidden="true">*</span>
                   <span className="relative block">
                     <input type={showPassword ? 'text' : 'password'} autoComplete="new-password" required value={form.password} onChange={(e) => update('password', e.target.value)} className={`${inputClass(submitted && !passwordValid)} ${form.confirmPassword ? (confirmValid ? 'border-success' : 'border-error') : ''} pr-12`} aria-invalid={submitted && !passwordValid} />
-                    <button type="button" className="touch-target absolute right-0 top-1 flex items-center px-3" aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}</button>
+                    <button type="button" className="touch-target absolute right-0 top-1 flex items-center px-3" aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeOffOutlineIcon size={20} /> : <EyeOutlineIcon size={20} />}</button>
                   </span>
                   <span className="mt-2 grid gap-1 text-xs" aria-live="polite">
-                    {passwordRules.map(([label, valid]) => <span key={label} className={valid ? 'text-success' : isDay ? 'text-ink-muted' : 'text-ivory'}>{valid ? <Check size={14} className="mr-1 inline" /> : <X size={14} className="mr-1 inline" />}{label}</span>)}
+                    {passwordRules.map(([label, valid]) => <span key={label} className={valid ? 'text-success' : isDay ? 'text-ink-muted' : 'text-ivory'}>{valid ? <CheckmarkIcon size={14} className="mr-1 inline" /> : <CloseOutlineIcon size={14} className="mr-1 inline" />}{label}</span>)}
                   </span>
                 </label>
                 <label className="auth-label block">Confirm password <span aria-hidden="true">*</span>
                   <span className="relative block">
                     <input type={showConfirmPassword ? 'text' : 'password'} autoComplete="new-password" required value={form.confirmPassword} onChange={(e) => update('confirmPassword', e.target.value)} className={`${inputClass(submitted && !confirmValid)} ${form.confirmPassword ? (confirmValid ? 'border-success' : 'border-error') : ''} pr-12`} aria-invalid={submitted && !confirmValid} />
-                    <button type="button" className="touch-target absolute right-0 top-1 flex items-center px-3" aria-label={showConfirmPassword ? 'Hide confirmation password' : 'Show confirmation password'} onClick={() => setShowConfirmPassword((visible) => !visible)}>{showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}</button>
+                    <button type="button" className="touch-target absolute right-0 top-1 flex items-center px-3" aria-label={showConfirmPassword ? 'Hide confirmation password' : 'Show confirmation password'} onClick={() => setShowConfirmPassword((visible) => !visible)}>{showConfirmPassword ? <EyeOffOutlineIcon size={20} /> : <EyeOutlineIcon size={20} />}</button>
                   </span>
                   {form.confirmPassword && <span className={`auth-password-status mt-1 block ${confirmValid ? 'text-success' : 'text-error'}`}>{confirmValid ? 'Passwords match' : 'Passwords do not match'}</span>}
                 </label>

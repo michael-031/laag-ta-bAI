@@ -10,11 +10,11 @@ export function AuthScreen({ children }: { children: ReactNode }) {
   return (
     <div
       data-theme="light"
-      className={`relative flex min-h-dvh flex-col bg-black bg-cover bg-center ${
+      className={`relative flex min-h-dvh flex-col bg-navy bg-cover bg-center ${
         night ? "bg-[url('/authenticationBG/LoginNight.webp')]" : "bg-[url('/authenticationBG/LoginDay.webp')]"
       }`}
     >
-      <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/15 to-black/55" aria-hidden />
+      <div className="absolute inset-0 bg-linear-to-b from-navy/60 via-navy/20 to-navy/75" aria-hidden />
       <div className="relative mx-auto flex w-full max-w-md flex-1 flex-col justify-between pt-[max(1rem,env(safe-area-inset-top))]">
         <div className="px-5">
           <header className="flex items-center justify-between gap-3 text-white">

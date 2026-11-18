@@ -55,7 +55,7 @@ export default function ExplorePage() {
       <div>
         <header
           data-palette="light"
-          className="relative overflow-hidden bg-black px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-14 text-white"
+          className="relative overflow-hidden bg-navy px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-14 text-white"
         >
           <img
             src="/authenticationBG/LoginDay.webp"
@@ -64,27 +64,27 @@ export default function ExplorePage() {
             className="absolute inset-0 size-full object-cover"
           />
           <div
-            className="absolute inset-0 bg-linear-to-b from-black/35 via-black/15 to-black/55"
+            className="absolute inset-0 bg-linear-to-b from-navy/60 via-navy/20 to-terracotta/45"
             aria-hidden
           />
 
           <div className="relative z-10 flex items-center justify-between gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-black shadow-xs backdrop-blur-md">
-              <LocationOutlineIcon size={14} />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-ivory-surface/95 px-3 py-1.5 text-xs font-semibold text-navy shadow-xs backdrop-blur-md">
+              <LocationOutlineIcon size={14} className="text-terracotta" />
               Cebu, PH
             </span>
             <div className="flex items-center gap-2">
               <Link
                 to="/archives"
                 aria-label="Saved places"
-                className="flex size-12 items-center justify-center rounded-full bg-white/90 text-black shadow-xs backdrop-blur-md transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-white"
+                className="flex size-12 items-center justify-center rounded-full bg-ivory-surface/95 text-navy shadow-xs backdrop-blur-md transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-white"
               >
                 <BookmarkOutlineIcon size={20} />
               </Link>
               <Link
                 to="/scan"
                 aria-label="Open visual AI scanner"
-                className="flex size-12 items-center justify-center rounded-full bg-white/90 text-black shadow-xs backdrop-blur-md transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-white"
+                className="flex size-12 items-center justify-center rounded-full bg-terracotta text-on-navy shadow-xs backdrop-blur-md transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-white"
               >
                 <CameraOutlineIcon size={20} />
               </Link>
@@ -101,7 +101,7 @@ export default function ExplorePage() {
         <div className="relative z-10 -mt-7 px-5">
           <div className="flex items-center gap-1 rounded-full border border-ivory-line bg-ivory-surface py-1 pr-1.5 pl-4 shadow-md focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-navy">
             <label className="flex min-w-0 flex-1 items-center gap-2.5">
-              <SearchIcon size={18} className="shrink-0 text-ink-muted" />
+              <SearchIcon size={18} className="shrink-0 text-terracotta" />
               <span className="sr-only">Search landmarks</span>
               <input
                 type="search"
@@ -114,7 +114,7 @@ export default function ExplorePage() {
             <Link
               to="/scan"
               aria-label="Scan landmark with AI camera"
-              className={`touch-target flex shrink-0 items-center justify-center rounded-full text-ink transition-colors hover:bg-ivory-deep ${focus}`}
+              className={`touch-target flex shrink-0 items-center justify-center rounded-full bg-terracotta-soft text-terracotta-ink transition-colors hover:bg-terracotta/20 ${focus}`}
             >
               <CameraOutlineIcon size={20} />
             </Link>
@@ -135,7 +135,7 @@ export default function ExplorePage() {
           <div className="-mx-5 mt-3 flex items-center gap-2 overflow-x-auto px-5 pb-1">
             <Link
               to="/scan"
-              className={`inline-flex min-h-12 shrink-0 items-center gap-1.5 rounded-full border border-ivory-line bg-ivory-deep px-4 text-xs font-bold text-ink transition-colors hover:border-line-strong ${focus}`}
+              className={`inline-flex min-h-12 shrink-0 items-center gap-1.5 rounded-full border border-terracotta/35 bg-terracotta-soft px-4 text-xs font-bold text-terracotta-ink transition-colors hover:bg-terracotta/20 ${focus}`}
             >
               <CameraOutlineIcon size={15} />
               AI Mode
@@ -290,7 +290,7 @@ function SpotlightCard({ landmark }: { landmark: LandmarkSummary }) {
       <Link
         to={`/landmarks/${landmark.id}`}
         data-palette="light"
-        className={`group relative block h-60 overflow-hidden rounded-[1.75rem] border border-ivory-line bg-black ${focus}`}
+        className={`group relative block h-60 overflow-hidden rounded-[1.75rem] border border-ivory-line bg-navy ${focus}`}
       >
         <LandmarkImage
           src={landmark.imageUrl}
@@ -298,17 +298,17 @@ function SpotlightCard({ landmark }: { landmark: LandmarkSummary }) {
           className="size-full transition-transform duration-500 group-hover:scale-105"
         />
         <div
-          className="absolute inset-0 bg-linear-to-t from-black/80 via-black/15 to-transparent"
+          className="absolute inset-0 bg-linear-to-t from-navy/90 via-navy/25 to-transparent"
           aria-hidden
         />
-        <span className="absolute top-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-black shadow-xs backdrop-blur-sm">
+        <span className="absolute top-4 left-4 rounded-full bg-terracotta px-3 py-1 text-xs font-semibold text-on-navy shadow-xs backdrop-blur-sm">
           {CATEGORY_LABELS[landmark.category]}
         </span>
         <div className="absolute inset-x-5 bottom-4 flex flex-col gap-1 text-white">
           <p className="font-display text-2xl leading-tight font-bold tracking-tight">{landmark.name}</p>
           <p className="flex flex-wrap items-center gap-x-2 text-xs font-medium text-white/90">
             <span className="inline-flex items-center gap-1 font-mono font-bold">
-              <StarIcon size={12} />
+              <StarIcon size={12} className="text-terracotta-light" />
               {landmark.rating.toFixed(1)}
             </span>
             <span aria-hidden>•</span>
@@ -337,7 +337,7 @@ function MapPreview({ geo }: { geo: ReturnType<typeof useGeolocation> }) {
       <div className="relative h-44 overflow-hidden rounded-3xl border border-ivory-line bg-ivory-deep">
         <div role="img" aria-label={MAP_LABEL[geo.status]} className="absolute inset-0">
           <svg viewBox="0 0 392 224" preserveAspectRatio="xMidYMid slice" className="size-full" aria-hidden>
-            <path d="M300 224C330 190 360 185 392 170V224H300Z" className="fill-ivory-line/70" />
+            <path d="M300 224C330 190 360 185 392 170V224H300Z" className="fill-sage-soft" />
             <g fill="none" strokeLinecap="round" className="stroke-ivory-surface">
               <path strokeWidth={10} d="M-10 200L120 120L260 70L410 20" />
               <path strokeWidth={5} d="M-10 60L150 90L300 150L410 170M90 -10L120 120L150 240M250 -10L260 70L280 240" />

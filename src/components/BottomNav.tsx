@@ -65,7 +65,7 @@ function TabLink({ tab, animate, onClick }: { tab: Tab; animate: boolean; onClic
       onClick={onClick}
       className={({ isActive }) =>
         `flex min-h-12 min-w-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-full px-1.5 py-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy ${
-          isActive ? 'bg-navy-soft/80 text-navy' : 'text-ink-muted hover:text-navy'
+          isActive ? 'bg-navy-soft text-navy' : 'text-ink-muted hover:text-navy'
         }`
       }
     >
@@ -98,8 +98,8 @@ function ScanTab({ tab, animate, onClick }: { tab: Tab; animate: boolean; onClic
           <span
             className={`flex size-12 items-center justify-center rounded-full shadow-navy transition-transform group-active:scale-95 ${
               isActive
-                ? 'bg-terracotta text-ivory ring-2 ring-navy/20'
-                : 'bg-navy text-on-navy group-hover:bg-navy-pressed'
+                ? 'bg-terracotta text-ivory ring-3 ring-terracotta-soft'
+                : 'bg-linear-to-br from-terracotta to-navy text-on-navy group-hover:from-terracotta-ink group-hover:to-navy-pressed'
             }`}
           >
             <tab.icon size={24} />

@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+import { DEMO_LANDMARKS } from '@/api/demoData'
 import { mockFetch, renderPage } from '@/test/render'
 import ScanPage from './ScanPage'
 
@@ -49,5 +50,64 @@ describe('ScanPage', () => {
     await user.upload(galleryInput, badFile)
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Use a JPEG, PNG or HEIC photo.')
+  })
+
+  it('auto-starts the built-in camera on mount and captures directly without opening a file picker', async () => {
+    const user = userEvent.setup()
+    const stopTrack = vi.fn()
+    const fakeStream = { getTracks: () => [{ stop: stopTrack }] } as unknown as MediaStream
+    const getUserMedia = vi.fn().mockResolvedValue(fakeStream)
+
+    Object.defineProperty(navigator, 'mediaDevices', {
+      configurable: true,
+      value: { getUserMedia },
+    })
+    const playSpy = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined)
+    const createObjectUrlSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:captured-frame')
+    const revokeObjectUrlSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
+
+    const fetchSpy = mockFetch((url) => {
+      if (url.pathname.endsWith('/v1/scan')) {
+        return {
+          data: {
+            status: 'identified',
+            confidence: 0.96,
+            landmark: DEMO_LANDMARKS[0],
+            candidates: [],
+            progress: null,
+          },
+        }
+      }
+      return { data: {} }
+    })
+
+    try {
+      renderPage(<ScanPage />, '/scan')
+
+      const video = (await screen.findByTestId('live-camera-video')) as HTMLVideoElement
+      expect(await screen.findByText('Live Camera')).toBeInTheDocument()
+      expect(getUserMedia).toHaveBeenCalledTimes(1)
+      expect(video.srcObject).toBe(fakeStream)
+      expect(playSpy).toHaveBeenCalled()
+
+      const cameraInput = screen.getByTestId('camera-input') as HTMLInputElement
+      const cameraInputClick = vi.spyOn(cameraInput, 'click')
+
+      await user.click(screen.getByRole('button', { name: 'Take photo' }))
+
+      expect(cameraInputClick).not.toHaveBeenCalled()
+      expect(await screen.findByText(/96% match/i)).toBeInTheDocument()
+      expect(screen.getByText(/Downtown Cebu City, Cebu City/)).toBeInTheDocument()
+      expect(screen.getAllByText("Magellan's Cross").length).toBeGreaterThanOrEqual(2)
+
+      const scanCall = fetchSpy.mock.calls.find(([input]) => String(input).includes('/v1/scan'))
+      expect(scanCall).toBeDefined()
+      expect(scanCall?.[1]?.method).toBe('POST')
+      expect(stopTrack).toHaveBeenCalled()
+    } finally {
+      createObjectUrlSpy.mockRestore()
+      revokeObjectUrlSpy.mockRestore()
+      delete (navigator as { mediaDevices?: unknown }).mediaDevices
+    }
   })
 })
