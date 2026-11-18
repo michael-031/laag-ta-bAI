@@ -214,7 +214,7 @@ export default function ChatPage() {
                     className="h-36 w-44 rounded-2xl border border-ivory-line object-cover"
                   />
                 )}
-                <div className="max-w-[82%] rounded-2xl rounded-br-sm bg-ivory-deep px-4 py-3 text-sm font-medium text-ink">
+                <div className="max-w-[82%] rounded-2xl rounded-br-sm bg-navy px-4 py-3 text-sm font-medium text-on-navy">
                   <div className="markdown leading-6">
                     <Markdown>{m.content}</Markdown>
                   </div>
@@ -223,7 +223,7 @@ export default function ChatPage() {
             ) : (
               <li key={i} className="flex flex-col gap-2.5">
                 <div className="flex items-start gap-2.5">
-                  <span className="mt-1 flex size-6 shrink-0 items-center justify-center rounded-full bg-ivory-deep text-ink">
+                  <span className="mt-1 flex size-6 shrink-0 items-center justify-center rounded-full bg-terracotta-soft text-terracotta-ink">
                     <CompassOutlineIcon size={14} />
                   </span>
                   <div className="min-w-0 flex-1 text-sm leading-6 text-ink">
@@ -244,7 +244,7 @@ export default function ChatPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-display truncate text-base font-bold text-ink">{spot.name}</p>
-                      <span className="mt-1 inline-block rounded-md bg-ivory-deep px-2 py-0.5 text-[0.6875rem] font-medium text-ink-body">
+                      <span className="mt-1 inline-block rounded-md bg-terracotta-soft px-2 py-0.5 text-[0.6875rem] font-medium text-terracotta-ink">
                         {CATEGORY_LABELS[spot.category] ?? spot.category}
                       </span>
                     </div>
@@ -252,11 +252,11 @@ export default function ChatPage() {
                   <div className="flex flex-wrap items-center justify-between gap-2 border-t border-ivory-line pt-2.5 font-mono text-xs text-ink-muted">
                     <span className="font-bold text-ink">{formatFee(spot.admissionFee)}</span>
                     <span className="inline-flex items-center gap-1">
-                      <StarIcon size={12} className="text-ink" />
+                      <StarIcon size={12} className="text-terracotta" />
                       {spot.rating.toFixed(1)}
                     </span>
                     <span className="inline-flex items-center gap-1 truncate font-sans">
-                      <LocationOutlineIcon size={12} />
+                      <LocationOutlineIcon size={12} className="text-sage-deep" />
                       {spot.district}
                     </span>
                     <span>{spot.estimatedVisitMinutes} min</span>

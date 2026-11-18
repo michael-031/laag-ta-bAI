@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import Markdown from 'react-markdown'
 import { answerAboutLandmark, DEMO_LANDMARKS } from '@/api/demoData'
@@ -9,6 +9,7 @@ import {
   ArrowForwardIcon,
   ArrowUpIcon,
   CameraOutlineIcon,
+  CameraReverseOutlineIcon,
   ImageOutlineIcon,
   LanguageOutlineIcon,
   LocationOutlineIcon,
@@ -39,9 +40,13 @@ const QUICK_QUESTIONS = [
 const SAMPLE_SPOTS = DEMO_LANDMARKS.slice(0, 5)
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy'
 
+type CameraState = 'starting' | 'ready' | 'unavailable'
+
+const hasLiveCamera = () => typeof navigator !== 'undefined' && typeof navigator.mediaDevices?.getUserMedia === 'function'
+
 /**
  * Google Lens-style visual AI scanner & multimodal Q&A (Image 5).
- * Top dark camera viewfinder with white reticle + pure white pull-up bottom sheet.
+ * Top lagoon-teal live camera viewfinder with white reticle + pull-up bottom sheet.
  */
 export default function ScanPage() {
   const geo = useGeolocation()
@@ -49,8 +54,14 @@ export default function ScanPage() {
   const chat = useChat()
   const cameraInput = useRef<HTMLInputElement>(null)
   const galleryInput = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const streamRef = useRef<MediaStream | null>(null)
 
   const [preview, setPreview] = useState<string | null>(null)
+  const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment')
+  const [cameraState, setCameraState] = useState<CameraState>(() =>
+    hasLiveCamera() ? 'starting' : 'unavailable',
+  )
   const [validationError, setValidationError] = useState<string | null>(null)
   const [sampleMatch, setSampleMatch] = useState<{ landmark: Landmark; confidence: number } | null>(null)
   const [activeTab, setActiveTab] = useState<LensTab>('ai')
@@ -64,16 +75,68 @@ export default function ScanPage() {
   const activeConfidence =
     scan.data?.status === 'identified' && scan.data.landmark ? scan.data.confidence : sampleMatch?.confidence ?? null
 
+  const stopCameraStream = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop())
+      streamRef.current = null
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null
+    }
+  }, [])
+
+  useEffect(() => {
+    if (preview !== null || !hasLiveCamera()) {
+      stopCameraStream()
+      return
+    }
+
+    let cancelled = false
+
+    const startCamera = async () => {
+      let stream: MediaStream
+      try {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: facingMode }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+            audio: false,
+          })
+        } catch {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        }
+      } catch {
+        if (!cancelled) setCameraState('unavailable')
+        return
+      }
+
+      if (cancelled) {
+        stream.getTracks().forEach((track) => track.stop())
+        return
+      }
+
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        void videoRef.current.play?.().catch(() => {})
+      }
+      setCameraState('ready')
+    }
+
+    void startCamera()
+
+    return () => {
+      cancelled = true
+      stopCameraStream()
+    }
+  }, [preview, facingMode, stopCameraStream])
+
   const resetConversation = () => {
     setAskedQuestion(null)
     setAiAnswer(null)
     chat.reset()
   }
 
-  const onFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    event.target.value = ''
-    if (!file) return
+  const processScannedFile = async (file: File) => {
     setValidationError(null)
     setSampleMatch(null)
     resetConversation()
@@ -83,6 +146,7 @@ export default function ScanPage() {
       setValidationError(check.reason)
       return
     }
+    stopCameraStream()
     setPreview((old) => {
       if (old && old.startsWith('blob:')) URL.revokeObjectURL(old)
       return URL.createObjectURL(file)
@@ -101,10 +165,86 @@ export default function ScanPage() {
     )
   }
 
+  const onFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    await processScannedFile(file)
+  }
+
+  const openLiveCamera = () => {
+    setValidationError(null)
+    setSampleMatch(null)
+    setCameraState(hasLiveCamera() ? 'starting' : 'unavailable')
+    setPreview((old) => {
+      if (old && old.startsWith('blob:')) URL.revokeObjectURL(old)
+      return null
+    })
+  }
+
+  const handleTakePhoto = async () => {
+    if (preview !== null) {
+      if (hasLiveCamera()) {
+        openLiveCamera()
+      } else {
+        cameraInput.current?.click()
+      }
+      return
+    }
+
+    if (cameraState === 'unavailable') {
+      cameraInput.current?.click()
+      return
+    }
+
+    if (cameraState !== 'ready' || !videoRef.current) return
+
+    const video = videoRef.current
+    const rawW = video.videoWidth || 1280
+    const rawH = video.videoHeight || 720
+    const scale = Math.max(1, 720 / Math.min(rawW, rawH), 1280 / Math.max(rawW, rawH))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(rawW * scale)
+    canvas.height = Math.round(rawH * scale)
+
+    const ctx = canvas.getContext('2d')
+    let blob: Blob | null = null
+    if (ctx) {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+      blob = await new Promise<Blob | null>((resolve) => {
+        if (typeof canvas.toBlob === 'function') {
+          canvas.toBlob((result) => resolve(result), 'image/jpeg', 0.92)
+        } else {
+          resolve(null)
+        }
+      })
+      if (!blob) {
+        try {
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.92)
+          const base64 = dataUrl.split(',')[1]
+          if (base64) {
+            const binary = atob(base64)
+            const bytes = new Uint8Array(binary.length)
+            for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i)
+            blob = new Blob([bytes], { type: 'image/jpeg' })
+          }
+        } catch {
+          blob = null
+        }
+      }
+    }
+
+    const capturedFile = new File([blob ?? new Uint8Array(1024)], 'magellan-camera-scan.jpg', {
+      type: 'image/jpeg',
+    })
+    await processScannedFile(capturedFile)
+  }
+
   const selectSampleSpot = (landmark: Landmark) => {
     setValidationError(null)
     scan.reset()
     resetConversation()
+    stopCameraStream()
     setPreview((old) => {
       if (old && old.startsWith('blob:')) URL.revokeObjectURL(old)
       return landmark.imageUrl
@@ -146,8 +286,8 @@ export default function ScanPage() {
 
   return (
     <div className="bleed-under-nav flex min-h-dvh flex-col bg-ivory text-ink">
-      {/* Dark Lens camera viewport (Image 5) */}
-      <section data-palette="light" className="relative bg-[#111113] pt-[max(0.75rem,env(safe-area-inset-top))] pb-10 text-white">
+      {/* Tropical Lagoon Lens camera viewport */}
+      <section data-palette="light" className="relative bg-linear-to-b from-[#07363c] via-navy to-[#094249] pt-[max(0.75rem,env(safe-area-inset-top))] pb-10 text-white">
         <header className="flex items-center justify-between gap-2 px-4 pb-3">
           <Link
             to="/"
@@ -158,7 +298,7 @@ export default function ScanPage() {
           </Link>
 
           <h1 className="text-base font-semibold tracking-tight text-white">
-            Laag ta bAI <span className="font-display text-lg font-normal italic">Lens</span>
+            Laag ta bAI <span className="font-display text-lg font-normal italic text-terracotta-light">Lens</span>
           </h1>
 
           <button
@@ -166,37 +306,88 @@ export default function ScanPage() {
             onClick={geo.request}
             aria-label={geo.status === 'ready' ? 'Location active' : 'Enable location verification'}
             className={`touch-target flex items-center gap-1 rounded-full px-3 text-xs font-semibold transition-colors ${
-              geo.status === 'ready' ? 'bg-white text-black' : 'bg-white/12 text-white hover:bg-white/20'
+              geo.status === 'ready' ? 'bg-sage-soft text-sage-deep' : 'bg-white/15 text-white hover:bg-white/25'
             }`}
           >
             <LocationOutlineIcon size={15} />
-            <span className="hidden min-[360px]:inline">{geo.status === 'ready' ? 'GPS' : 'GPS'}</span>
+            <span className="hidden min-[360px]:inline">GPS</span>
           </button>
         </header>
 
-        {/* Camera / Image Frame with Lens Framing Brackets (Image 5) */}
-        <div className="relative mx-4 aspect-[4/3.4] overflow-hidden rounded-3xl bg-zinc-900">
+        {/* Built-In Live Camera / Image Frame with Lens Framing Brackets */}
+        <div className="relative mx-4 aspect-[4/3.4] overflow-hidden rounded-3xl bg-[#06252a] ring-1 ring-white/15">
           {preview ? (
-            <img src={preview} alt="Your scanned landmark" className="size-full object-cover" />
+            <>
+              <img src={preview} alt="Your scanned landmark" className="size-full object-cover" />
+              <button
+                type="button"
+                onClick={openLiveCamera}
+                className="touch-target absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-ivory-surface/95 px-3.5 text-xs font-bold text-navy shadow-md backdrop-blur-sm transition-transform active:scale-95"
+              >
+                <CameraOutlineIcon size={15} />
+                Live camera
+              </button>
+            </>
           ) : (
-            <div className="relative flex size-full flex-col items-center justify-center p-6 text-center">
-              <img
-                src="/landmarks/magellan.jpg"
-                alt=""
-                aria-hidden
-                className="absolute inset-0 size-full object-cover opacity-30"
+            <>
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                data-testid="live-camera-video"
+                aria-label="Built-in camera viewfinder"
+                className="size-full object-cover"
               />
-              <div className="relative z-10 flex flex-col items-center gap-2">
-                <ScanOutlineIcon size={32} className="text-white/90" />
-                <p className="max-w-xs text-sm font-medium text-white">
-                  Point or upload a landmark photo, then ask bAI where it is.
-                </p>
-              </div>
-            </div>
+
+              {cameraState === 'ready' && (
+                <>
+                  <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-navy/85 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
+                    <span className="size-2 animate-pulse rounded-full bg-emerald-400" aria-hidden />
+                    Live Camera
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCameraState('starting')
+                      setFacingMode((m) => (m === 'environment' ? 'user' : 'environment'))
+                    }}
+                    aria-label="Switch camera"
+                    className="touch-target absolute top-2 right-2 z-10 flex size-12 items-center justify-center rounded-full bg-navy/80 text-white shadow-md backdrop-blur-sm transition-colors hover:bg-navy"
+                  >
+                    <CameraReverseOutlineIcon size={20} />
+                  </button>
+                </>
+              )}
+
+              {cameraState === 'starting' && (
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-[#06252a]/75 p-6 text-center backdrop-blur-[1px]">
+                  <ScanOutlineIcon size={32} className="animate-pulse text-terracotta-light" />
+                  <p className="text-sm font-medium text-white">Starting built-in camera…</p>
+                </div>
+              )}
+
+              {cameraState === 'unavailable' && (
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 text-center">
+                  <img
+                    src="/landmarks/magellan.jpg"
+                    alt=""
+                    aria-hidden
+                    className="absolute inset-0 size-full object-cover opacity-35"
+                  />
+                  <div className="relative z-10 flex flex-col items-center gap-2">
+                    <ScanOutlineIcon size={32} className="text-terracotta-light" />
+                    <p className="max-w-xs text-sm font-medium text-white">
+                      Built-in camera unavailable — upload a photo or pick a Cebu spot below.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {/* White corner brackets framing the focal subject */}
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center" aria-hidden>
             <div className={`relative size-44 sm:size-52 ${scan.isPending ? 'animate-pulse' : ''}`}>
               <span className="absolute top-0 left-0 size-6 rounded-tl-xl border-t-3 border-l-3 border-white/95" />
               <span className="absolute top-0 right-0 size-6 rounded-tr-xl border-t-3 border-r-3 border-white/95" />
@@ -208,7 +399,7 @@ export default function ScanPage() {
           {scan.isPending && (
             <div
               role="status"
-              className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black/60 backdrop-blur-[2px]"
+              className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-navy/70 backdrop-blur-[2px]"
             >
               <span className="size-7 animate-spin rounded-full border-3 border-white/30 border-t-white" aria-hidden />
               <p className="text-sm font-semibold text-white">Identifying landmark…</p>
@@ -222,7 +413,7 @@ export default function ScanPage() {
               aria-pressed={cebuanoMode}
               aria-label={cebuanoMode ? 'Switch AI notes to English' : 'Show Cebuano greeting mode'}
               className={`flex size-12 items-center justify-center rounded-full shadow-md transition-colors ${
-                cebuanoMode ? 'bg-black text-white ring-2 ring-white' : 'bg-white text-black'
+                cebuanoMode ? 'bg-terracotta text-on-navy ring-2 ring-white' : 'bg-ivory-surface text-navy'
               }`}
             >
               <LanguageOutlineIcon size={19} />
@@ -234,8 +425,8 @@ export default function ScanPage() {
         <div className="mt-3 grid grid-cols-2 gap-2.5 px-4">
           <button
             type="button"
-            onClick={() => cameraInput.current?.click()}
-            className="touch-target flex items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-bold text-black transition-transform active:scale-95"
+            onClick={handleTakePhoto}
+            className="touch-target flex items-center justify-center gap-2 rounded-full bg-terracotta px-4 text-sm font-bold text-on-navy shadow-md transition-transform hover:bg-terracotta-ink active:scale-95"
           >
             <CameraOutlineIcon size={18} />
             Take photo
@@ -243,7 +434,7 @@ export default function ScanPage() {
           <button
             type="button"
             onClick={() => galleryInput.current?.click()}
-            className="touch-target flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 text-sm font-bold text-white transition-colors hover:bg-white/20"
+            className="touch-target flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 text-sm font-bold text-white transition-colors hover:bg-white/25"
           >
             <ImageOutlineIcon size={18} />
             Upload
@@ -270,7 +461,7 @@ export default function ScanPage() {
 
         {/* Sample Cebu spots for quick testing */}
         <div className="mt-3 flex items-center gap-2 overflow-x-auto px-4 pb-1">
-          <span className="shrink-0 text-xs font-medium text-white/70">Try:</span>
+          <span className="shrink-0 text-xs font-medium text-white/75">Try:</span>
           {SAMPLE_SPOTS.map((spot) => {
             const selected = activeLandmark?.id === spot.id && sampleMatch !== null
             return (
@@ -279,7 +470,7 @@ export default function ScanPage() {
                 type="button"
                 onClick={() => selectSampleSpot(spot)}
                 className={`flex min-h-10 shrink-0 items-center gap-2 rounded-full px-2.5 py-1 pr-3 text-xs font-medium transition-colors ${
-                  selected ? 'bg-white text-black' : 'bg-white/12 text-white hover:bg-white/20'
+                  selected ? 'bg-sage-soft text-sage-deep' : 'bg-white/15 text-white hover:bg-white/25'
                 }`}
               >
                 <img src={spot.imageUrl ?? ''} alt="" className="size-6 rounded-full object-cover" />
@@ -415,7 +606,7 @@ export default function ScanPage() {
             )}
 
             {cebuanoMode && (
-              <p className="rounded-xl bg-ivory-deep px-3.5 py-2.5 text-xs font-medium text-ink">
+              <p className="rounded-xl border border-terracotta/25 bg-terracotta-soft px-3.5 py-2.5 text-xs font-medium text-ink">
                 Maayong adlaw, bai! Mao ni ang <strong>{activeLandmark.name}</strong> sa {activeLandmark.district}.
               </p>
             )}
@@ -457,7 +648,7 @@ export default function ScanPage() {
                   <p className="font-display truncate text-base font-bold text-ink">{activeLandmark.name}</p>
                   <p className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-muted">
                     <span className="inline-flex items-center gap-0.5 font-mono font-bold text-ink">
-                      <StarIcon size={11} /> {activeLandmark.rating.toFixed(1)}
+                      <StarIcon size={11} className="text-terracotta" /> {activeLandmark.rating.toFixed(1)}
                     </span>
                     <span>· {CATEGORY_LABELS[activeLandmark.category]}</span>
                     <span className="font-mono">· {formatFee(activeLandmark.admissionFee)}</span>

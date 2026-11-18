@@ -33,7 +33,7 @@ export function LandmarkTile({ landmark }: { landmark: LandmarkSummary }) {
     <Link
       to={`/landmarks/${landmark.id}`}
       data-palette="light"
-      className={`group relative flex h-64 w-52 shrink-0 snap-start flex-col justify-between overflow-hidden rounded-[1.75rem] border border-ivory-line bg-black p-3.5 text-white shadow-sm transition-transform duration-200 hover:-translate-y-0.5 ${focus}`}
+      className={`group relative flex h-64 w-52 shrink-0 snap-start flex-col justify-between overflow-hidden rounded-[1.75rem] border border-ivory-line bg-navy p-3.5 text-white shadow-sm transition-transform duration-200 hover:-translate-y-0.5 ${focus}`}
     >
       <LandmarkImage
         src={landmark.imageUrl}
@@ -41,16 +41,16 @@ export function LandmarkTile({ landmark }: { landmark: LandmarkSummary }) {
         className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
       />
       <div
-        className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-black/25"
+        className="absolute inset-0 bg-linear-to-t from-navy/90 via-navy/25 to-terracotta/20"
         aria-hidden
       />
 
       <div className="relative z-10 flex items-center justify-between gap-2">
-        <span className="max-w-[7.5rem] truncate rounded-full bg-white/95 px-2.5 py-1 font-mono text-[0.6875rem] leading-none font-bold text-black backdrop-blur-sm">
+        <span className="max-w-[7.5rem] truncate rounded-full bg-ivory-surface/95 px-2.5 py-1 font-mono text-[0.6875rem] leading-none font-bold text-navy backdrop-blur-sm">
           {formatDistance(landmark.distanceMeters) ?? landmark.district}
         </span>
-        <span className="shrink-0 rounded-full bg-white/95 px-2.5 py-1 backdrop-blur-sm">
-          <Rating value={landmark.rating} className="text-black" />
+        <span className="shrink-0 rounded-full bg-ivory-surface/95 px-2.5 py-1 backdrop-blur-sm">
+          <Rating value={landmark.rating} className="text-terracotta-ink" />
         </span>
       </div>
 
@@ -84,16 +84,16 @@ export function LandmarkRow({ landmark }: { landmark: LandmarkSummary }) {
           className="size-full transition-transform duration-500 group-hover:scale-105"
         />
         <div
-          className="absolute inset-0 bg-linear-to-b from-black/25 via-transparent to-black/20"
+          className="absolute inset-0 bg-linear-to-b from-navy/35 via-transparent to-navy/30"
           aria-hidden
         />
-        <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 font-mono text-[0.6875rem] leading-none font-bold text-black shadow-xs backdrop-blur-sm">
+        <span className="absolute top-3 left-3 rounded-full bg-sage-soft/95 px-3 py-1 font-mono text-[0.6875rem] leading-none font-bold text-sage-deep shadow-xs backdrop-blur-sm">
           {formatFee(landmark.admissionFee)}
         </span>
-        <span className="absolute top-3 right-3 rounded-full bg-white/95 px-2.5 py-1 shadow-xs backdrop-blur-sm">
-          <Rating value={landmark.rating} className="text-black" />
+        <span className="absolute top-3 right-3 rounded-full bg-ivory-surface/95 px-2.5 py-1 shadow-xs backdrop-blur-sm">
+          <Rating value={landmark.rating} className="text-terracotta-ink" />
         </span>
-        <span className="absolute right-3 bottom-3 rounded-lg bg-navy px-2.5 py-1 text-[0.6875rem] font-bold tracking-wide text-on-navy shadow-sm">
+        <span className="absolute right-3 bottom-3 rounded-lg bg-terracotta px-2.5 py-1 text-[0.6875rem] font-bold tracking-wide text-on-navy shadow-sm">
           {CATEGORY_LABELS[landmark.category]}
         </span>
       </div>
@@ -105,13 +105,13 @@ export function LandmarkRow({ landmark }: { landmark: LandmarkSummary }) {
 
         <div className="flex items-center justify-between gap-2 pt-0.5 text-xs text-ink-muted">
           <span className="flex min-w-0 items-center gap-1.5 truncate">
-            <LocationOutlineIcon size={14} className="shrink-0 text-ink" />
+            <LocationOutlineIcon size={14} className="shrink-0 text-terracotta" />
             <span className="truncate">
               {landmark.district}
               {distance && ` · ${distance}`}
             </span>
           </span>
-          <span className="inline-flex shrink-0 items-center gap-1 font-bold text-ink transition-transform duration-200 group-hover:translate-x-0.5">
+          <span className="inline-flex shrink-0 items-center gap-1 font-bold text-terracotta-ink transition-transform duration-200 group-hover:translate-x-0.5">
             Read story
             <ArrowForwardIcon size={12} />
           </span>

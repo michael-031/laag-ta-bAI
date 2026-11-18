@@ -34,30 +34,30 @@
 
 :root,
 [data-theme='light'] {
-  --bg: #fffdf4;
-  --bg-2: #f6eedb;
-  --surface: rgb(43 14 14 / 0.05);
-  --surface-strong: rgb(43 14 14 / 0.1);
-  --line: rgb(43 14 14 / 0.12);
-  --fg: #333333;
-  --muted: #6b5f5a;
-  --primary: #e69138;
-  --on-primary: #2b0e0e;
+  --bg: #fffbf4;
+  --bg-2: #f4ebd9;
+  --surface: rgb(13 92 99 / 0.06);
+  --surface-strong: rgb(13 92 99 / 0.12);
+  --line: rgb(13 92 99 / 0.14);
+  --fg: #0b2e36;
+  --muted: #4e6e75;
+  --primary: #e76f51;
+  --on-primary: #fffbf4;
   --nav: #ffffff;
   color-scheme: light;
 }
 
 [data-theme='dark'] {
-  --bg: #2b0e0e;
-  --bg-2: #571717;
-  --surface: rgb(255 255 255 / 0.07);
-  --surface-strong: rgb(255 255 255 / 0.12);
-  --line: rgb(255 255 255 / 0.12);
-  --fg: #f4ece4;
-  --muted: #c9b8b0;
-  --primary: #ffc107;
-  --on-primary: #2b0e0e;
-  --nav: #fffdf4;
+  --bg: #0a1d24;
+  --bg-2: #112b35;
+  --surface: rgb(72 202 228 / 0.08);
+  --surface-strong: rgb(72 202 228 / 0.14);
+  --line: rgb(72 202 228 / 0.16);
+  --fg: #f2fbf9;
+  --muted: #8ab5b2;
+  --primary: #ff8566;
+  --on-primary: #06181f;
+  --nav: #112b35;
   color-scheme: dark;
 }
 
@@ -110,61 +110,61 @@
 :root,
 [data-theme='light'],
 [data-palette='light'] {
-  --ds-ivory: #ffffff;
-  --ds-ivory-deep: #f4f5f7;
+  --ds-ivory: #fffbf4;
+  --ds-ivory-deep: #f4ebd9;
   --ds-surface: #ffffff;
-  --ds-line: #ebebef;
-  --ds-line-strong: #d1d5db;
-  --ds-navy: #111111;
-  --ds-navy-pressed: #27272a;
-  --ds-navy-soft: #f3f4f6;
-  --ds-on-navy: #ffffff;
-  --ds-ink: #111111;
-  --ds-ink-body: #374151;
-  --ds-ink-muted: #6b7280;
-  --ds-ink-faint: #9ca3af;
-  --ds-sage: #9ca3af;
-  --ds-sage-soft: #f3f4f6;
-  --ds-sage-deep: #1f2937;
-  --ds-terracotta: #111111;
-  --ds-terracotta-ink: #111111;
-  --ds-terracotta-soft: #f3f4f6;
-  --ds-terracotta-light: #e5e7eb;
-  --ds-danger: #b91c1c;
-  --ds-danger-soft: #fef2f2;
-  --ds-danger-line: #fecaca;
-  --ds-shadow-tabbar: 0 -4px 20px 0 rgb(17 17 17 / 0.06);
-  --ds-shadow-topbar: 0 4px 14px 0 rgb(17 17 17 / 0.06);
-  --ds-shadow-navy: 0 10px 24px -4px rgb(17 17 17 / 0.14), 0 4px 8px -4px rgb(17 17 17 / 0.08);
+  --ds-line: #e5d9c3;
+  --ds-line-strong: #b3a388;
+  --ds-navy: #0d5c63;
+  --ds-navy-pressed: #084248;
+  --ds-navy-soft: #ddf2f0;
+  --ds-on-navy: #fffbf4;
+  --ds-ink: #0b2e36;
+  --ds-ink-body: #254a52;
+  --ds-ink-muted: #4e6e75;
+  --ds-ink-faint: #7f9ba1;
+  --ds-sage: #2a9d8f;
+  --ds-sage-soft: #dcf5ee;
+  --ds-sage-deep: #165b52;
+  --ds-terracotta: #e76f51;
+  --ds-terracotta-ink: #b54124;
+  --ds-terracotta-soft: #ffe8df;
+  --ds-terracotta-light: #ffb49a;
+  --ds-danger: #c92a2a;
+  --ds-danger-soft: #ffe8e8;
+  --ds-danger-line: #ffa8a8;
+  --ds-shadow-tabbar: 0 -6px 24px 0 rgb(13 92 99 / 0.12);
+  --ds-shadow-topbar: 0 4px 16px 0 rgb(13 92 99 / 0.1);
+  --ds-shadow-navy: 0 10px 24px -4px rgb(13 92 99 / 0.28), 0 4px 10px -4px rgb(231 111 81 / 0.16);
 }
 
 [data-theme='dark'] {
-  --ds-ivory: #111113;
-  --ds-ivory-deep: #18181b;
-  --ds-surface: #1c1c20;
-  --ds-line: #27272a;
-  --ds-line-strong: #3f3f46;
-  --ds-navy: #fafafa;
-  --ds-navy-pressed: #e4e4e7;
-  --ds-navy-soft: #27272a;
-  --ds-on-navy: #111113;
-  --ds-ink: #fafafa;
-  --ds-ink-body: #d4d4d8;
-  --ds-ink-muted: #a1a1aa;
-  --ds-ink-faint: #71717a;
-  --ds-sage: #71717a;
-  --ds-sage-soft: #27272a;
-  --ds-sage-deep: #e4e4e7;
-  --ds-terracotta: #f4f4f5;
-  --ds-terracotta-ink: #fafafa;
-  --ds-terracotta-soft: #27272a;
-  --ds-terracotta-light: #d4d4d8;
-  --ds-danger: #f87171;
-  --ds-danger-soft: #2f1515;
-  --ds-danger-line: #7f1d1d;
-  --ds-shadow-tabbar: 0 -4px 20px 0 rgb(0 0 0 / 0.4);
-  --ds-shadow-topbar: 0 4px 14px 0 rgb(0 0 0 / 0.4);
-  --ds-shadow-navy: 0 10px 24px -4px rgb(0 0 0 / 0.5), 0 4px 8px -4px rgb(0 0 0 / 0.35);
+  --ds-ivory: #0a1d24;
+  --ds-ivory-deep: #061318;
+  --ds-surface: #112b35;
+  --ds-line: #1f4452;
+  --ds-line-strong: #477687;
+  --ds-navy: #48cae4;
+  --ds-navy-pressed: #22b0cc;
+  --ds-navy-soft: #163a47;
+  --ds-on-navy: #06181f;
+  --ds-ink: #f2fbf9;
+  --ds-ink-body: #c7e6e3;
+  --ds-ink-muted: #8ab5b2;
+  --ds-ink-faint: #568280;
+  --ds-sage: #52b788;
+  --ds-sage-soft: #153b33;
+  --ds-sage-deep: #95e5be;
+  --ds-terracotta: #ff8566;
+  --ds-terracotta-ink: #ffa68f;
+  --ds-terracotta-soft: #3a211d;
+  --ds-terracotta-light: #ffbdae;
+  --ds-danger: #ff8787;
+  --ds-danger-soft: #3b1a1d;
+  --ds-danger-line: #8a3036;
+  --ds-shadow-tabbar: 0 -6px 24px 0 rgb(3 12 16 / 0.55);
+  --ds-shadow-topbar: 0 4px 16px 0 rgb(3 12 16 / 0.5);
+  --ds-shadow-navy: 0 10px 24px -4px rgb(3 12 16 / 0.65), 0 4px 10px -4px rgb(72 202 228 / 0.2);
 }
 
 html,
@@ -243,27 +243,27 @@ body {
  * Keep this below the existing styles while the screens are migrated.
  */
 :root {
-  --artifact-ivory: #ffffff;
-  --artifact-navy: #111111;
-  --artifact-sage: #9ca3af;
-  --artifact-sage-dark: #374151;
-  --artifact-terracotta: #111111;
-  --artifact-line: #e5e7eb;
+  --artifact-ivory: #fffbf4;
+  --artifact-navy: #0d5c63;
+  --artifact-sage: #2a9d8f;
+  --artifact-sage-dark: #165b52;
+  --artifact-terracotta: #e76f51;
+  --artifact-line: #e5d9c3;
 }
 
 @theme {
-  --color-artifact-ivory: #f7f3ea;
-  --color-artifact-navy: #243b53;
-  --color-artifact-sage: #a9b7a5;
-  --color-artifact-sage-dark: #536b58;
-  --color-artifact-terracotta: #c66a4e;
-  --color-artifact-line: #d8d1c5;
+  --color-artifact-ivory: #fffbf4;
+  --color-artifact-navy: #0d5c63;
+  --color-artifact-sage: #2a9d8f;
+  --color-artifact-sage-dark: #165b52;
+  --color-artifact-terracotta: #e76f51;
+  --color-artifact-line: #e5d9c3;
 
   /* Ivory, navy, sage, terracotta and ink are defined once above via --ds-*, so they follow the theme. */
-  --color-design-surface: #f4f5f7;
-  --color-design-line: #e5e7eb;
-  /* Navy darkened for the night-mode card base (navy 72% + black 28%). */
-  --color-navy-deep: #1a2a3c;
+  --color-design-surface: #f4ebd9;
+  --color-design-line: #e5d9c3;
+  /* Navy darkened for the night-mode card base (lagoon night). */
+  --color-navy-deep: #07363c;
   --color-error: #ff7b72;
   --color-success: #6fcf75;
 }
@@ -291,11 +291,11 @@ body {
 }
 
 [data-theme='dark'] .artifact-splash {
-  --artifact-ivory: #111113;
-  --artifact-navy: #fafafa;
-  --artifact-line: #27272a;
-  --artifact-sage: #71717a;
-  --artifact-terracotta: #fafafa;
+  --artifact-ivory: #0a1d24;
+  --artifact-navy: #f2fbf9;
+  --artifact-line: #1f4452;
+  --artifact-sage: #52b788;
+  --artifact-terracotta: #ff8566;
 }
 
 [data-theme='dark'] .artifact-splash-logo,
@@ -329,7 +329,7 @@ body {
   width: 40%;
   height: 100%;
   border-radius: inherit;
-  background: var(--artifact-navy);
+  background: linear-gradient(90deg, var(--artifact-terracotta), var(--artifact-sage), var(--artifact-navy));
   animation: artifact-progress 1.5s ease-in-out infinite;
 }
 

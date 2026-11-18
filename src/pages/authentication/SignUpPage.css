@@ -35,122 +35,122 @@
 }
 
 .auth-signup-day .auth-signup-card {
-  border-color: #ebebef;
-  background: #ffffff;
-  color: #111111;
-  box-shadow: 0 -8px 30px rgb(17 17 17 / 0.12);
+  border-color: #e5d9c3;
+  background: #fffbf4;
+  color: #0b2e36;
+  box-shadow: 0 -8px 30px rgb(13 92 99 / 0.14);
 }
 
 .auth-signup-day .auth-signup-heading,
 .auth-signup-day .auth-signup-card p,
 .auth-signup-day .auth-signup-card label,
 .auth-signup-day .auth-signup-card .auth-label {
-  color: #111111;
+  color: #0b2e36;
 }
 
 .auth-signup-day .auth-signup-card input,
 .auth-signup-day .auth-signup-card textarea,
 .auth-signup-day .auth-signup-card .auth-date-field {
-  border-color: #e5e7eb;
-  background: #f4f5f7;
-  color: #111111;
+  border-color: #e5d9c3;
+  background: #f4ebd9;
+  color: #0b2e36;
 }
 
 .auth-signup-day .auth-signup-card input::placeholder,
 .auth-signup-day .auth-signup-card textarea::placeholder {
-  color: #6b7280;
+  color: #4e6e75;
 }
 
 .auth-signup-day .auth-signup-card .auth-date-field span {
-  color: #111111;
+  color: #0b2e36;
 }
 
 .auth-signup-day .auth-signup-card input.border-error,
 .auth-signup-day .auth-signup-card .auth-date-field-invalid {
-  border-color: #dc2626;
+  border-color: #c92a2a;
 }
 
 .auth-signup-day .auth-signup-card input.border-success {
-  border-color: #16a34a;
+  border-color: #2a9d8f;
 }
 
 .auth-signup-day .auth-signup-card .auth-date-field:focus-visible,
 .auth-signup-day .auth-signup-card input:focus,
 .auth-signup-day .auth-signup-card textarea:focus {
-  border-color: #111111;
-  box-shadow: 0 0 0 3px rgb(17 17 17 / 0.12);
+  border-color: #0d5c63;
+  box-shadow: 0 0 0 3px rgb(13 92 99 / 0.16);
 }
 
 .auth-signup-day .auth-signup-card input.border-error:focus,
 .auth-signup-day .auth-signup-card input.border-error:focus-visible {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 3px rgb(220 38 38 / 0.16);
+  border-color: #c92a2a;
+  box-shadow: 0 0 0 3px rgb(201 42 42 / 0.18);
 }
 
 .auth-signup-day .auth-signup-card input.border-success:focus,
 .auth-signup-day .auth-signup-card input.border-success:focus-visible {
-  border-color: #16a34a;
-  box-shadow: 0 0 0 3px rgb(22 163 74 / 0.16);
+  border-color: #2a9d8f;
+  box-shadow: 0 0 0 3px rgb(42 157 143 / 0.2);
 }
 
 .auth-signup-day .auth-date-field svg {
-  color: #111111;
+  color: #e76f51;
 }
 
 .auth-signup-day .auth-signup-card .text-error {
-  color: #b91c1c;
+  color: #c92a2a;
 }
 
 .auth-signup-day .auth-signup-card .text-success {
-  color: #15803d;
+  color: #165b52;
 }
 
 .auth-signup-day .auth-signup-card > .rounded-2xl {
-  border-color: #e5e7eb;
-  background: #f4f5f7;
-  color: #111111;
+  border-color: #e5d9c3;
+  background: #f4ebd9;
+  color: #0b2e36;
 }
 
 .auth-signup-day .auth-signup-card form > button[type='submit'] {
-  background: #111111;
-  color: #ffffff;
+  background: #0d5c63;
+  color: #fffbf4;
 }
 
 .auth-signup-day .auth-signup-card .auth-label input,
 .auth-signup-day .auth-signup-card .auth-label textarea {
-  color: #111111;
+  color: #0b2e36;
 }
 
 .auth-signup-day .auth-signup-card .auth-terms-checkbox {
-  border-color: #9ca3af;
+  border-color: #b3a388;
 }
 
 .auth-signup-day .auth-signup-card a {
-  color: #111111;
+  color: #b54124;
 }
 
 .auth-signup-night .auth-signup-card {
-  border-color: #27272a;
-  background: #18181b;
-  color: #fafafa;
-  box-shadow: 0 -8px 30px rgb(0 0 0 / 0.45);
+  border-color: #1f4452;
+  background: #112b35;
+  color: #f2fbf9;
+  box-shadow: 0 -8px 30px rgb(3 12 16 / 0.5);
 }
 
 .auth-signup-night .auth-signup-card input,
 .auth-signup-night .auth-signup-card textarea,
 .auth-signup-night .auth-signup-card .auth-date-field {
-  border-color: #3f3f46;
-  background: #27272a;
-  color: #fafafa;
+  border-color: #1f4452;
+  background: #163a47;
+  color: #f2fbf9;
 }
 
 .auth-signup-night .auth-signup-card .auth-label {
-  color: #e4e4e7;
+  color: #c7e6e3;
 }
 
 .auth-signup-night .auth-signup-card form > button[type='submit'] {
-  background: #fafafa;
-  color: #111111;
+  background: #48cae4;
+  color: #06181f;
 }
 
 .auth-signup-night .auth-signup-card input.border-error,
@@ -166,7 +166,7 @@
 .auth-signup-night .auth-signup-card input:focus,
 .auth-signup-night .auth-signup-card textarea:focus {
   border-color: var(--ds-terracotta);
-  box-shadow: 0 0 0 3px rgb(198 107 78 / 0.2);
+  box-shadow: 0 0 0 3px rgb(255 133 102 / 0.22);
 }
 
 .auth-signup-night .auth-signup-card input.border-error:focus,
@@ -182,7 +182,7 @@
 }
 
 .auth-signup-night .auth-signup-card .text-muted {
-  color: #a1a1aa;
+  color: #8ab5b2;
 }
 
 .auth-signup-night .auth-signup-card .text-error {
@@ -194,7 +194,7 @@
 }
 
 .auth-signup-night .auth-signup-card > .rounded-2xl {
-  background: #27272a;
+  background: #163a47;
 }
 
 .auth-label {
@@ -541,14 +541,14 @@
 
 .auth-signup-day .auth-signup-card input[type='password'],
 .auth-signup-day .auth-signup-card input[type='text'] {
-  background-color: #f4f5f7;
-  color: #111111;
+  background-color: #f4ebd9;
+  color: #0b2e36;
 }
 
 .auth-signup-night .auth-signup-card input[type='password'],
 .auth-signup-night .auth-signup-card input[type='text'] {
-  background-color: #27272a;
-  color: #fafafa;
+  background-color: #163a47;
+  color: #f2fbf9;
 }
 
 .auth-signup input[type='password']::-ms-reveal,
@@ -562,8 +562,8 @@
 .auth-signup-day input:-webkit-autofill:hover,
 .auth-signup-day input:-webkit-autofill:focus,
 .auth-signup-day input:-webkit-autofill:active {
-  -webkit-text-fill-color: #111111;
-  -webkit-box-shadow: 0 0 0 1000px #f4f5f7 inset;
+  -webkit-text-fill-color: #0b2e36;
+  -webkit-box-shadow: 0 0 0 1000px #f4ebd9 inset;
   transition: background-color 9999s ease-in-out 0s;
 }
 
@@ -571,8 +571,8 @@
 .auth-signup-night input:-webkit-autofill:hover,
 .auth-signup-night input:-webkit-autofill:focus,
 .auth-signup-night input:-webkit-autofill:active {
-  -webkit-text-fill-color: #fafafa;
-  -webkit-box-shadow: 0 0 0 1000px #27272a inset;
+  -webkit-text-fill-color: #f2fbf9;
+  -webkit-box-shadow: 0 0 0 1000px #163a47 inset;
   transition: background-color 9999s ease-in-out 0s;
 }
 

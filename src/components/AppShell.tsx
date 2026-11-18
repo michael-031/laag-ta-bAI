@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router'
-import { RotateCcw } from 'lucide-react'
 import { BottomNav } from './BottomNav'
+import { RefreshCwOutlineIcon } from './icons/ionicons'
 
 export function AppShell() {
   return (
@@ -18,7 +18,7 @@ export function AppShell() {
 export function LandscapeGuard() {
   return (
     <div className="landscape-guard fixed inset-0 z-[60] flex-col items-center justify-center gap-3 bg-navy text-center text-on-navy">
-      <RotateCcw size={40} aria-hidden />
+      <RefreshCwOutlineIcon size={40} aria-hidden />
       <p className="text-lg font-bold">Please rotate your phone to portrait</p>
     </div>
   )
